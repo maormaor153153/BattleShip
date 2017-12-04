@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#66FF99"
+    >
+
+
+
+    <TextView
+        android:id="@+id/battleshiptitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="63dp"
+        android:text="BattleShip"
+        android:textSize="40dp" />
+
+    <Button
+        android:id="@+id/startgame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape"
+        android:text=" Start Game "
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/battleshiptitle"
+        android:layout_alignLeft="@+id/startgame"
+        android:layout_alignRight="@+id/battleshiptitle"
+        android:layout_alignStart="@+id/startgame"
+        android:layout_below="@+id/startgame"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape"
+        android:text="Rules"
+        android:textSize="30dp" />
+
+    <LinearLayout
+        android:id="@+id/levels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        >
+
+
+        <Button
+            android:id="@+id/easy"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape"
+            android:text="Easy"
+            />
+
+        <Button
+            android:id="@+id/medium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape"
+            android:text="Medium
+"           />
+
+
+        <Button
+            android:id="@+id/hard"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape"
+            android:text="Hard"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>
