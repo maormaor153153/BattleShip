@@ -65,6 +65,12 @@ public class  Ship {
         return shipCoordinates;
     }
 
+
+
+
+
+
+
     @Override
     public String toString() {
         return "Ship{" +

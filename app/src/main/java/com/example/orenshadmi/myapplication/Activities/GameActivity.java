@@ -1,22 +1,18 @@
 package com.example.orenshadmi.myapplication.Activities;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.Toast;
 import android.view.ViewParent;
 
 
@@ -26,7 +22,6 @@ import com.example.orenshadmi.myapplication.R;
 import com.example.orenshadmi.myapplication.Views.GridButton;
 
 import java.util.Random;
-import java.util.Timer;
 
 import static android.app.PendingIntent.getActivity;
 
@@ -54,6 +49,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
     GameLogicNew gameLogic = GameLogicNew.getInstance();
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,62 +189,88 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-
-
-
     @SuppressLint("NewApi")
     @Override
     public void onClick(View v) {
         if (v instanceof GridButton) {
             final GridButton gridButton = (GridButton) v;
             flagPlayer = gameLogic.attckComputerBoard(gridButton.getPositionX(), +gridButton.getPositionY());
-            v.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
-                    if (flagPlayer == true || WasAttackedComputer(gridButton.getPositionX(),gridButton.getPositionY()) == true) {
-                        Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
-                        gridButton.setBackgroundDrawable(occupied);
+            if (gameLogic.wasMissPlayer(gridButton.getPositionX(), gridButton.getPositionY()) == true)
+            {
 
-                    } else {
-                        gridButton.setBackgroundColor(0xff0000ff);
-
+            } else if (flagPlayer == true ) {
+                v.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
                     }
+                }).start();
+                Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
+                gridButton.setBackgroundDrawable(occupied);
+               // gameLogic.destroyedShipByPlayer();
+                WinPlayer();
 
-                }
-            }).start();
+
+
+                computerAttack();
+
+
+
+            } else if(gameLogic.wasAttackedComputer(gridButton.getPositionX(), gridButton.getPositionY()) == false){
+                v.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
+                    }
+                }).start();
+                gameLogic.updateMissPlayer(gridButton.getPositionX(), gridButton.getPositionY());
+                gridButton.setBackgroundColor(0xff0000ff);
+                computerAttack();
+
+            }
+
         }
-        WinPlayer();
-        computerAttack();
-
 
     }
+
+
+
+
+
     @SuppressLint("NewApi")
     public void computerAttack() {
-        int randomIndex ;
+        int randomIndex;
         randomIndex = foundLevelGame();
-
-        View vNew;
+        View gridButtoN;
         GridLayout gridLayoutattck = findViewById(R.id.player_layout);
+        gridButtoN = gridLayoutattck.getChildAt(randomIndex);
+        final GridButton gridButton = (GridButton) gridButtoN;
 
-            vNew = gridLayoutattck.getChildAt(randomIndex);
-            final GridButton gridButton = (GridButton) vNew;
-            flagForComputer = gameLogic.attackPlayerBoard(gridButton.getPositionX(), gridButton.getPositionY());
-             vNew.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+        flagForComputer = gameLogic.attackPlayerBoard(gridButton.getPositionX(), gridButton.getPositionY());
+        if (gameLogic.wasMissComputer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
+            computerAttack();
+        } else if (flagForComputer == true) {
+            gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-
                     gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
-                    if (flagForComputer == true|| WasAttackedPlayer(gridButton.getPositionX(),gridButton.getPositionY()) == true) {
-                        Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
-                        gridButton.setBackgroundDrawable(occupied);
-
-                    } else
-                        gridButton.setBackgroundColor(0xff0000ff);
                 }
             }).start();
-        WinComputer();
+            Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
+            gridButton.setBackgroundDrawable(occupied);
+            WinComputer();
+
+        } else if (gameLogic.wasAttackedPlayer(gridButton.getPositionX(), gridButton.getPositionY()) == false) {
+            gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
+                }
+            }).start();
+            gameLogic.updateMissComputer(gridButton.getPositionX(), gridButton.getPositionY());
+            gridButton.setBackgroundColor(0xff0000ff);
+
+        }
     }
 
     private int foundLevelGame() {
@@ -314,9 +336,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
           startActivity(intent);
       }
-
     }
-
     private void WinComputer() {
         boolean flag ;
         flag =  gameLogic.winComputerLog();
@@ -328,20 +348,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             intent.putExtra("status", status);
             startActivity(intent);
         }
-
-    }
-
-    private boolean WasAttackedComputer(int x , int y)
-    {
-        boolean flag;
-        flag = gameLogic.WasAttackedComputer(x,y);
-        return flag;
-    }
-    private boolean WasAttackedPlayer(int x , int y)
-    {
-        boolean flag;
-        flag = gameLogic.WasAttackedPlayer(x,y);
-        return flag;
     }
 }
 

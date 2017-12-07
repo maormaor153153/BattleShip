@@ -360,7 +360,7 @@ public class GameLogicNew {
     public boolean attckComputerBoard(int positionX, int positionY) {
         boolean flag;
         flag = computerBoard.updateCellToAttack(computerBoard, positionX, positionY);
-        Log.d(TAG, "onPlayerClicked: " + positionX + ", " + positionY);
+      //  Log.d(TAG, "onPlayerClicked: " + positionX + ", " + positionY);
         return flag;
     }
 
@@ -371,16 +371,12 @@ public class GameLogicNew {
 
     }
 
-    public boolean WasAttackedComputer(int positionX, int positionY) {
+    public boolean wasAttackedComputer(int positionX, int positionY) {
         boolean flag;
         flag = computerBoard.wasAttack(computerBoard, positionX, positionY);
         return flag;
     }
-    public boolean WasAttackedPlayer(int positionX, int positionY) {
-        boolean flag;
-        flag = playerBoard.wasAttack(playerBoard, positionX, positionY);
-        return flag;
-    }
+
 
     public boolean winPlayerLog()
     {
@@ -401,5 +397,50 @@ public class GameLogicNew {
         playerBoard.addShipToFleet(ship);
     }
 
+    public boolean wasMissPlayer(int positionX, int positionY) {
+        boolean flag;
+        flag = computerBoard.wasMiss(computerBoard, positionX, positionY);
+        return flag;
+    }
+
+
+
+    public boolean IfAvailablePlayer(int positionX, int positionY) {
+        boolean flag;
+        flag = computerBoard.IfAvailable(computerBoard, positionX, positionY);
+        return flag;
+    }
+
+    public boolean IfOccupiedPlayer(int positionX, int positionY) {
+        boolean flag;
+        flag = computerBoard.IfOccupied(computerBoard, positionX, positionY);
+        return flag;
+    }
+
+    public void destroyedShipByPlayer() {
+
+
+       // computerBoard.destroyedShip(computerBoard);
+
+    }
+
+    public boolean wasMissComputer(int positionX, int positionY) {
+        boolean flag;
+        flag = playerBoard.wasMiss(playerBoard, positionX, positionY);
+        return flag;
+    }
+
+    public boolean wasAttackedPlayer(int positionX, int positionY) {
+        boolean flag;
+        flag = playerBoard.wasAttack(playerBoard, positionX, positionY);
+        return flag;
+    }
+
+    public void updateMissPlayer(int positionX, int positionY) {
+         computerBoard.updateMiss(computerBoard, positionX, positionY);
+    }
+    public void updateMissComputer(int positionX, int positionY) {
+        playerBoard.updateMiss(playerBoard, positionX, positionY);
+    }
 }
 

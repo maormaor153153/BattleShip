@@ -19,14 +19,13 @@ public class Board {
     private Coordinate mat[][];
     private Coordinate matComputer[][];
     ArrayList<Ship> fleet;
+    Ship s;
 
     public Board(int size) {
-        //createEmptyMat(); //Maor
-        //createEmptyMatComptuer(); Maor
+
         createEmptyMat(size);
 
         this.fleet = new ArrayList<>();
-        //this.cell = new Coordinate();
     }
 
 
@@ -42,22 +41,12 @@ public class Board {
     public boolean updateCellToAttack(Board board ,int positionX, int positionY)
     {
         boolean flag = false;
-        Log.d("Board ", ""+board.mat[positionX][positionY]);
         if(board.mat[positionX][positionY].isOccupied()) {
             board.mat[positionX][positionY].setState(Coordinate.status.Attacked);
            flag = true;
        }
         return flag;
     }
-    /*public boolean updateCellToAttackComputerToPlayer(int positionX, int positionY)
-    {
-        boolean flag = false;
-        if(this.mat[positionX][positionY].isOccupied()) {
-            this.mat[positionX][positionY].setState(Coordinate.status.Attacked);
-            flag = true;
-        }
-        return flag;
-    }*/
     public boolean winner(Board board)
     {
         boolean flag = true;
@@ -74,14 +63,6 @@ public class Board {
             {
                  break;
             }
-        }
-        return flag;
-    }
-    public boolean wasAttack(Board board,int positionX, int positionY)
-    {
-        boolean flag = false;
-        if(board.mat[positionX][positionY].isAttacked() == true) {
-           flag = true;
         }
         return flag;
     }
@@ -174,4 +155,57 @@ public class Board {
         return matString;
     }
 
+    public boolean wasAttack(Board board,int positionX, int positionY)
+    {
+        boolean flag = false;
+        if(board.mat[positionX][positionY].isAttacked() == true) {
+            flag = true;
+        }
+        return flag;
+    }
+
+
+
+    public boolean wasMiss(Board board, int positionX, int positionY) {
+
+        boolean flag = false;
+        if(board.mat[positionX][positionY].isMiss() == true) {
+            flag = true;
+        }
+        return flag;
+
+    }
+
+    public void updateMiss(Board computerBoard, int positionX, int positionY) {
+        //boolean flag = false;
+
+      //  if(computerBoard.mat[positionX][positionY].isOccupied()) {
+            computerBoard.mat[positionX][positionY].setState(Coordinate.status.Miss);
+         //   flag = true;
+       // }
+      //  return flag;
+    }
+
+    public boolean IfAvailable(Board Board, int positionX, int positionY) {
+
+        boolean flag = false;
+        if(Board.mat[positionX][positionY].isAvailable() == true) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    public boolean IfOccupied(Board Board, int positionX, int positionY) {
+        boolean flag = false;
+        if(Board.mat[positionX][positionY].isOccupied() == true) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    public void destroyedShip(Board board)
+    {
+      //  Log.d("sss","" + board.s.getLength());
+       //Log.d("sss","" + board.fleet.get(1).getShipCoordinates().toString());
+    }
 }

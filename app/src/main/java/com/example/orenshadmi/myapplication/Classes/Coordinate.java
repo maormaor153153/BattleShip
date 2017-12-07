@@ -6,7 +6,7 @@ package com.example.orenshadmi.myapplication.Classes;
 
 public class Coordinate {
 
-    public enum status {Empty, Occupied,Available, Attacked, Miss};
+    public enum status {Empty, Occupied,Available, Attacked, Miss}
     private int positionX;
     private int positionY;
     private status state;
@@ -57,7 +57,15 @@ public class Coordinate {
             return true;
         }
     }
+    public boolean isMiss(){
 
+        if(this.state != status.Miss){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 
     public boolean isAvailable(){
         	        if(this.state == status.Available) {
@@ -68,14 +76,13 @@ public class Coordinate {
             	        }
         	    }
 
-        	    public boolean isEmpty(){
-                if(this.state == status.Empty) {
-            	            return true;
-                    }
-                else{
+        	    public boolean isEmpty() {
+                    if (this.state == status.Empty) {
+                        return true;
+                    } else {
                         return false;
-            	        }
-            }
+                    }
+                }
 
 
     @Override
