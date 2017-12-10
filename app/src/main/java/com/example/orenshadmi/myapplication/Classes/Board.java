@@ -44,6 +44,7 @@ public class Board {
         if(board.mat[positionX][positionY].isOccupied()) {
             board.mat[positionX][positionY].setState(Coordinate.status.Attacked);
            flag = true;
+           Log.d("stateCheck",board.mat[positionX][positionY].toString());
        }
         return flag;
     }
@@ -66,10 +67,6 @@ public class Board {
         }
         return flag;
     }
-
-
-
-
     private Coordinate[][] createEmptyMat(int size) {
         this.ROWS = size;
         this.COLS = size;
@@ -203,9 +200,5 @@ public class Board {
         return flag;
     }
 
-    public void destroyedShip(Board board)
-    {
-      //  Log.d("sss","" + board.s.getLength());
-       //Log.d("sss","" + board.fleet.get(1).getShipCoordinates().toString());
-    }
+
 }

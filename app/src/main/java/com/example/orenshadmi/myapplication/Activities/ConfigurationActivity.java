@@ -13,7 +13,11 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.widget.Button;
+import android.widget.TextView;
+
 import android.view.ViewParent;
 import android.widget.LinearLayout;
 import com.example.orenshadmi.myapplication.Classes.Coordinate;
@@ -49,9 +53,14 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
 
         setContentView(layout.activity_configuration);
+       // Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Sansaul_Petronika.ttf");
 
+                TextView tx = findViewById(id.place_your_ships);
+        //	        tx.setTypeface(custom_font);
+        	        tx.setTextColor(Color.BLACK);
 
        findViewById(id.play).setOnClickListener(new View.OnClickListener() {
 
@@ -81,6 +90,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
         setGameLevel();
         createBoard();
         this.linearLayout = createShips();
+
     }
 
     private void setGameLevel() {
@@ -148,7 +158,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
         int screenWidth = size.x;
 
         GridLayout gridLayout = findViewById(id.grid_layout);
-        Log.d("ScreenWidth", "" + screenWidth);
+        //Log.d("ScreenWidth", "" + screenWidth);
         int cellSize = screenWidth / gridLayout.getColumnCount();
         cellSize -= 10;
 
@@ -182,18 +192,30 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
         if (v instanceof GridButton) {
             final GridButton gridButton = (GridButton) v;
 
-            if(gridButton.isShip){
-                LinearLayout linearLayout = (LinearLayout)gridButton.getParent();
+            if(gridButton.isShip) {
+                LinearLayout linearLayout = (LinearLayout) gridButton.getParent();
                 shipSize = (Integer) gridButton.getTag();
                 gridButton.setPlaced(true);
+                SetAllButtonsThatNotPlacedToEnableShape(linearLayout, gridButton);
 
-                gameLogic.setShipBySizeButton(gridButton.getTag());
-                disableAllButtonThatNotPlaced(shipSize, linearLayout);
-                Drawable queued = getResources().getDrawable( R.drawable.white);
+                // gameLogic.setShipBySizeButton(gridButton.getTag());
+                //disableAllButtonThatNotPlaced(shipSize, linearLayout);
+                gameLogic.setSize(shipSize);
+                setAllButtonThatNotQueuedToShape(linearLayout);
+
+                Drawable queued = getResources().getDrawable(R.drawable.white);
                 gridButton.setBackgroundDrawable(queued);
+                v.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
+                        Drawable white = getResources().getDrawable(R.drawable.white);
+                        gridButton.setBackgroundDrawable(white);
+                    }
+                }).start();
             }
             else {
-                boolean placed =  gameLogic.placeShip(gridButton.getPositionX(), gridButton.getPositionY());
+                boolean placed =  gameLogic.placeUserShips(gridButton.getPositionX(), gridButton.getPositionY());
                 if(placed){
                     v.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
                         @Override
@@ -204,7 +226,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
                         }
                     }).start();
                     disableShipButtonThatPlaced(this.linearLayout);
-                    enableShipButtonThatnotPlaced(this.linearLayout);
+                   // enableShipButtonThatnotPlaced(this.linearLayout);
 
                 }
 
@@ -214,7 +236,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
 
         }
     }
-    private void enableShipButtonThatnotPlaced(LinearLayout linearLayout) {
+  /*  private void enableShipButtonThatnotPlaced(LinearLayout linearLayout) {
         for ( int i = 0; i < linearLayout.getChildCount();  i++ ) {
             GridButton button = (GridButton) linearLayout.getChildAt(i);
             if (! button.isPlaced ) {
@@ -223,7 +245,21 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
                 button.setBackgroundDrawable(shape);
             }
         }
-    }
+    }*/
+  private void SetAllButtonsThatNotPlacedToEnableShape(LinearLayout linearLayout, GridButton gridButton) {
+      int size = linearLayout.getChildCount();
+      for( int i = 0 ; i < size ; i++){
+          GridButton shipButton = (GridButton)linearLayout.getChildAt(i);
+          if(shipButton.isEnabled() && !(shipButton.equals(gridButton))){
+              shipButton.setPlaced(false);
+              Drawable shape = getResources().getDrawable( R.drawable.shape);
+              shipButton.setBackgroundDrawable(shape);
+          }
+
+      }
+
+
+  }
     private void disableShipButtonThatPlaced(LinearLayout linearLayout) {
         for ( int i = 0; i < linearLayout.getChildCount();  i++ ) {
             GridButton button = (GridButton) linearLayout.getChildAt(i);
@@ -273,19 +309,24 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
                     Drawable empty = ContextCompat.getDrawable(this, R.drawable.shape);
                     button.setBackgroundDrawable(empty);
                 }
-
+                if (board[i / gridLayout.getRowCount()][i % gridLayout.getColumnCount()].isOptional()) {
+                    	                    GridButton button = (GridButton) gridLayout.getChildAt(i);
+                    	                    Drawable optional = ContextCompat.getDrawable(this, R.drawable.optional);
+                    	                    button.setBackgroundDrawable(optional);
+                    	                }
 
             }
         }
     }
 
-    private void disableAllButtonThatNotPlaced(int shipSize, View v) {
+    private void setAllButtonThatNotQueuedToShape(View v) {
         if(v instanceof LinearLayout){
             LinearLayout layout = (LinearLayout) v;
             for ( int i = 0; i < layout.getChildCount();  i++ ){
                 GridButton button = (GridButton) layout.getChildAt(i);
                 if(!button.isPlaced) {
-                    button.setEnabled(false);
+                    Drawable empty = ContextCompat.getDrawable(this, R.drawable.shape);
+                    button.setBackgroundDrawable(empty);
                 }
             }
         }

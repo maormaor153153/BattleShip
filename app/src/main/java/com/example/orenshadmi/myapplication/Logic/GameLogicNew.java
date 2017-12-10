@@ -1,7 +1,11 @@
 package com.example.orenshadmi.myapplication.Logic;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.orenshadmi.myapplication.Activities.GameActivity;
 import com.example.orenshadmi.myapplication.Classes.Board;
 import java.util.Random;
 import com.example.orenshadmi.myapplication.Classes.Coordinate;
@@ -14,16 +18,21 @@ import java.util.ArrayList;
 
 public class GameLogicNew {
 
+    private static final String TAG = GameLogicNew.class.getSimpleName();
+    private static final GameLogicNew ourInstance = new GameLogicNew();
 
-    private static boolean isFirstClick = true;
+    private static boolean isFirstClick ;
     private static Coordinate firstClick;
     private static Coordinate secondClick;
-    private static int gameLevel;
+   // private static int gameLevel;
     private static Board playerBoard;
     private static Board computerBoard;
     private static final int[] SIZE_OF_SHIPS = new int[]{2, 3, 3, 4, 5};
+    private static int size;
+    private static int gameLevel;
 
-    private static final GameLogicNew ourInstance = new GameLogicNew();
+
+    //private static final GameLogicNew ourInstance = new GameLogicNew();
 
     public static GameLogicNew getInstance() {
         return ourInstance;
@@ -34,8 +43,12 @@ public class GameLogicNew {
         // this.playerBoard = new Board(); //Maor
         //   this.computerBoard = new Board(); Maor
         //this.computerBoard = createComputerBoard();//Maor
+        this.size = 0;
+        	        this.isFirstClick = true;
     }
-
+    public static void setSize(int size) {
+        	        GameLogicNew.size = size;
+        	    }
     public void createBoards(int size) {
         this.playerBoard = new Board(size);
         this.computerBoard = new Board(size);
@@ -106,7 +119,8 @@ public class GameLogicNew {
 
                     ship.setShipCoordinates(positions);
                     ship.setState(Ship.configStatus.placed);
-                    setAvailableToEmpty(computerBoard);
+                    addShipToFleet(computerBoard, ship);
+                    setEmptyIfNotOccupied(computerBoard);
                 }
             }
 
@@ -149,13 +163,15 @@ public class GameLogicNew {
     }
 
 
-    private static final String TAG = GameLogicNew.class.getSimpleName();
+   // private static final String TAG = GameLogicNew.class.getSimpleName();
 
 
-    public static boolean placeShip(int positionX, int positionY) {
-        Log.d(TAG, "onPlayerClicked: " + positionX + ", " + positionY);
-        Ship ship = playerBoard.getQueuedShip();
-        if (ship != null) {
+    public static boolean placeUserShips(int positionX, int positionY) {
+      //      Log.d(TAG, "onPlayerClicked: " + positionX + ", " + positionY);
+       // Ship ship = playerBoard.getQueuedShip();
+        //if (ship != null) {
+        if(size != 0) {
+            Ship ship = new Ship(size);
 
 
             if (!(playerBoard.getMat()[positionX][positionY].isOccupied())) {
@@ -171,10 +187,10 @@ public class GameLogicNew {
                         playerBoard.getMat()[positionX][positionY].setState(Coordinate.status.Occupied);
                         return true;
                     }
-
+                    playerBoard.getMat()[positionX][positionY].setState(Coordinate.status.Optional);
                     paintOptions(playerBoard, ship.getLength(), positionX, positionY);
                     isFirstClick = false;
-                    playerBoard.getMat()[positionX][positionY].setState(Coordinate.status.Occupied);
+                   // playerBoard.getMat()[positionX][positionY].setState(Coordinate.status.Occupied);
                 }
 
 
@@ -185,9 +201,18 @@ public class GameLogicNew {
 
                         ship.setShipCoordinates(positions);
                         ship.setState(Ship.configStatus.placed);
-                        setAvailableToEmpty(playerBoard);
+                        setEmptyIfNotOccupied(playerBoard);
+                        addShipToFleet(playerBoard, ship);
+
                         isFirstClick = true;
+                        size = 0;
+
                         return true;
+                    }else {
+                        	                        firstClick = new Coordinate(positionX, positionY);
+                        	                        setEmptyIfNotOccupied(playerBoard);
+                        	                        playerBoard.getMat()[positionX][positionY].setState(Coordinate.status.Optional);
+                        	                        paintOptions(playerBoard, ship.getLength(), positionX, positionY);
 
                     }
                 }
@@ -198,10 +223,10 @@ public class GameLogicNew {
     }
 
 
-    private static void setAvailableToEmpty(Board board) {
+    private static void setEmptyIfNotOccupied(Board board) {
         for (int i = 0; i < board.getROWS(); i++) {
             for (int j = 0; j < board.getCOLS(); j++) {
-                if ((board.getMat()[i][j].isAvailable())) {
+                if (!(board.getMat()[i][j].isOccupied())) {
                     board.getMat()[i][j].setState(Coordinate.status.Empty);
                 }
             }
@@ -264,13 +289,8 @@ public class GameLogicNew {
             }
 
         }
-
         return shipPositions;
-
-
     }
-
-
     private static void paintOptions(Board boardToPaint, int length, int positionX, int positionY) {
 
         int optionBottom = positionX + (length - 1);
@@ -288,13 +308,10 @@ public class GameLogicNew {
                 boardToPaint.getMat()[positionX][positionY - (length - 1)].setState(Coordinate.status.Available);
             }
         }
-
         if (optionBottom >= 0 && optionBottom < boardToPaint.getROWS()) {
             if (isPossibleToPaint(boardToPaint, optionBottom, positionX, positionY, true))
                 boardToPaint.getMat()[positionX + (length - 1)][positionY].setState(Coordinate.status.Available);
         }
-
-
         if (optionTop >= 0 && optionTop < boardToPaint.getROWS()) {
             if (isPossibleToPaint(boardToPaint, positionX, optionTop, positionY, true))
                 boardToPaint.getMat()[positionX - (length - 1)][positionY].setState(Coordinate.status.Available);
@@ -347,6 +364,19 @@ public class GameLogicNew {
             Log.d(TAG, "onComputerRandom: " + x + ", " + y);
         }
     }
+
+    public static void addShipToFleet(Board board, Ship ship){
+        	        board.getFleet().add(ship);
+        	    }
+
+
+        	    public void printfleet(Board board){
+
+        	        for (int i = 0 ; i < board.getFleet().size(); i ++){
+            	          Log.d("Fleet: ",board.getFleet().get(i).getShipCoordinates().toString());
+
+            	        }
+        	    }
 
     public static Board getPlayerBoard() {
         return playerBoard;
@@ -417,11 +447,72 @@ public class GameLogicNew {
         return flag;
     }
 
-    public void destroyedShipByPlayer() {
+    public int destroyedShipByPlayer(int positionX, int positionY) {
+
+        int forReturn = -1 ;
+        for (int i = 0 ; i < computerBoard.getFleet().size(); i ++) {
+            boolean flagForDead = true;
 
 
-       // computerBoard.destroyedShip(computerBoard);
+            for (int j = 0; j < computerBoard.getFleet().get(i).getShipCoordinates().size(); j++) {
+                if (computerBoard.getFleet().get(i).getShipCoordinates().get(j).getPositionX() == positionX &&
+                        computerBoard.getFleet().get(i).getShipCoordinates().get(j).getPositionY() == positionY) {
+                        computerBoard.getFleet().get(i).getShipCoordinates().get(j).setState(Coordinate.status.Attacked );
+                }
+            }
+            for (int j = 0; j < computerBoard.getFleet().get(i).getShipCoordinates().size(); j++) {
+                        if(!computerBoard.getFleet().get(i).getShipCoordinates().get(j).getState().toString().equals(Coordinate.status.Attacked.toString()))
+                        {
+                            Log.d("Loop",""+j);
+                            flagForDead = false;
+                            //break;
+                        }
+            }
+            Log.d("FlagFlag ",""+flagForDead);
+            if(flagForDead == true && (!computerBoard.getFleet().get(i).getState().toString().equals(Ship.configStatus.dead.toString())))
+            {
+                Log.d("flagForDead","true");
+                computerBoard.getFleet().get(i).setState(Ship.configStatus.dead);
+                forReturn = i;
+            }
+           // Log.d("FleetComputer: ", computerBoard.getFleet().get(i).getShipCoordinates().toString());
+            Log.d("FleetPlayer: ",computerBoard.getFleet().get(i).toString());
+        }
+        return forReturn;
+    }
 
+
+    public int destroyedShipByComputer(int positionX, int positionY) {
+
+        int forReturn = -1 ;
+        for (int i = 0 ; i < playerBoard.getFleet().size(); i ++) {
+            boolean flagForDead = true;
+
+
+            for (int j = 0; j < playerBoard.getFleet().get(i).getShipCoordinates().size(); j++) {
+                if (playerBoard.getFleet().get(i).getShipCoordinates().get(j).getPositionX() == positionX &&
+                        playerBoard.getFleet().get(i).getShipCoordinates().get(j).getPositionY() == positionY) {
+                    playerBoard.getFleet().get(i).getShipCoordinates().get(j).setState(Coordinate.status.Attacked );
+                }
+            }
+            for (int j = 0; j < playerBoard.getFleet().get(i).getShipCoordinates().size(); j++) {
+                if(!playerBoard.getFleet().get(i).getShipCoordinates().get(j).getState().toString().equals(Coordinate.status.Attacked.toString()))
+                {
+                    Log.d("Loop",""+j);
+                    flagForDead = false;
+                    //break;
+                }
+            }
+            Log.d("FlagFlag ",""+flagForDead);
+            if(flagForDead == true && (!playerBoard.getFleet().get(i).getState().toString().equals(Ship.configStatus.dead.toString())))
+            {
+                Log.d("flagForDead","true");
+                playerBoard.getFleet().get(i).setState(Ship.configStatus.dead);
+                forReturn = i;
+            }
+            Log.d("FleetPlayer: ",playerBoard.getFleet().get(i).toString());
+        }
+        return forReturn;
     }
 
     public boolean wasMissComputer(int positionX, int positionY) {
@@ -442,5 +533,8 @@ public class GameLogicNew {
     public void updateMissComputer(int positionX, int positionY) {
         playerBoard.updateMiss(playerBoard, positionX, positionY);
     }
+
+
+
 }
 

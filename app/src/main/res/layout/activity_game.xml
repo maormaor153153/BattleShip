@@ -26,4 +26,46 @@
         android:rowCount="10"
         android:layout_marginTop="10dip"/>
 
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+    android:text="                                                             Blue is Miss    "
+    android:id="@+id/textblue" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textblue"
+        android:textColor="@color/red"
+
+        android:text="                                                             Red is Attacked    "
+        android:id="@+id/textred" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textred"
+        android:textColor="@color/black"
+
+        android:text="                                                             Black is Ship    "
+        android:id="@+id/textblack" />
+
+    <TextView
+        android:id="@+id/turn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="30dp"
+        android:text="how turn"/>
+
+
+
+
+
+
+
+
+
+
 </RelativeLayout>

@@ -6,7 +6,7 @@ package com.example.orenshadmi.myapplication.Classes;
 
 public class Coordinate {
 
-    public enum status {Empty, Occupied,Available, Attacked, Miss}
+    public enum status {Empty,Optional, Occupied,Available, Attacked, Miss}
     private int positionX;
     private int positionY;
     private status state;
@@ -17,8 +17,17 @@ public class Coordinate {
         this.positionY = setPositionY(y);
         this.state=status.Empty;
     }
+    public Coordinate(int x, int y,status state){
+        this.positionX = setPositionX(x);
+        this.positionY = setPositionY(y);
+        this.state = state.Occupied;
+    }
     public void setState(status state) {
         this.state = state;
+    }
+
+     public String getState(){
+        return this.state.name();
     }
 
     public int getPositionX() {
@@ -83,6 +92,13 @@ public class Coordinate {
                         return false;
                     }
                 }
+    public boolean isOptional() {
+        	        if (this.state == status.Optional) {
+            	            return true;
+            	        }
+
+        	        return false;
+        	    }
 
 
     @Override

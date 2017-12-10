@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#66FF99"
+    tools:context="com.example.orenshadmi.myapplication.Activities.RuleActivity">
+
+
+    <TextView
+        android:id="@+id/rules_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rules"
+        android:textColor="#000000"
+        android:textSize="100dp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/rules_linear_layout"/>
+
+
+    <LinearLayout
+        android:id="@+id/rules_linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+
+        >
+
+
+
+
+        <TextView
+            android:id="@+id/game_objective"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Objective"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textColor="#000000"
+            android:text="The object of Battleship is to try and sink all of the other player's before they sink all of your ships. All of the other player's ships are somewhere on his/her board.  You try and hit them by calling out the coordinates of one of the squares on the board.  The other player also tries to hit your ships by calling out coordinates.  Neither you nor the other player can see the other's board so you must try to guess where they are.  Each board in the physical game has two grids:  the lower (horizontal) section for the player's ships and the upper part (vertical during play) for recording the player's guesses." />
+
+        <TextView
+            android:id="@+id/start_new_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Starting a new game"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textColor="#000000"
+            android:text="Each player places the ships somewhere on their board.  The ships can only be placed vertically or horizontally. Diagonal placement is not allowed. No part of a ship may hang off the edge of the board. No ships may be placed on another ship. " />
+    </LinearLayout>
+</RelativeLayout>

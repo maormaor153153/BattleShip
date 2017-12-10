@@ -16,31 +16,41 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="63dp"
-        android:text="BattleShip"
-        android:textSize="40dp" />
+        android:text="BattleShips"
+        android:textSize="100dp"
+        android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/startgame"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/shape"
-        android:text=" Start Game "
-        android:textSize="30dp" />
+        android:layout_above="@+id/levels"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="96dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/rules"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/battleshiptitle"
-        android:layout_alignLeft="@+id/startgame"
-        android:layout_alignRight="@+id/battleshiptitle"
-        android:layout_alignStart="@+id/startgame"
-        android:layout_below="@+id/startgame"
-        android:layout_marginTop="18dp"
-        android:background="@drawable/shape"
-        android:text="Rules"
-        android:textSize="30dp" />
+        <Button
+            android:id="@+id/startgame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape"
+            android:text=" Start Game "
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/rules"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/startgame"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape"
+            android:text="Rules"
+            android:textSize="20dp" />
+
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/levels"

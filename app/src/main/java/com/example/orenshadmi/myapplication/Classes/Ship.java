@@ -14,21 +14,21 @@ public class  Ship {
     boolean horizontal = false;
       boolean vertical = false;
 
+
+
+
     public Ship(int length) {
         this.length = length;
         this.state = configStatus.unplaced;
         this.shipCoordinates = new ArrayList<>();
 
     }
-
     public void setShipCoordinates(int positionX, int positionY) {
-
-
-            if(this.shipCoordinates.size() < this.length){
-               Coordinate cor = new Coordinate(positionX, positionY);
-                cor.setState(Coordinate.status.Occupied);
-                this.shipCoordinates.add(cor);
-            }
+        	            if(this.shipCoordinates.size() < this.length){
+            	               Coordinate cor = new Coordinate(positionX, positionY);
+            	                cor.setState(Coordinate.status.Occupied);
+            	                this.shipCoordinates.add(cor);
+            	            }
     }
 
 
@@ -57,6 +57,10 @@ public class  Ship {
         this.state = state;
     }
 
+    public String getState(){
+        return  this.state.name();
+    }
+
     public int getLength() {
        return this.length;
     }
@@ -64,6 +68,7 @@ public class  Ship {
     public ArrayList<Coordinate> getShipCoordinates() {
         return shipCoordinates;
     }
+
 
 
 
