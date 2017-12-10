@@ -11,7 +11,6 @@ public class Coordinate {
     private int positionY;
     private status state;
 
-
     public Coordinate(int x, int y) {
         this.positionX = setPositionX(x);
         this.positionY = setPositionY(y);
@@ -47,18 +46,15 @@ public class Coordinate {
         return this.positionY = positionY;
     }
 
-    public boolean isOccupied(){
-
-        if(this.state != status.Occupied){
+    public boolean isOccupied() {
+        if (this.state != status.Occupied) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
 
     public boolean isAttacked(){
-
         if(this.state != status.Attacked){
             return false;
         }
@@ -75,36 +71,30 @@ public class Coordinate {
             return true;
         }
     }
+    public boolean isAvailable() {
+        if (this.state == status.Available) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    public boolean isAvailable(){
-        	        if(this.state == status.Available) {
-                        return true;
-            	        }
-        	        else{
-            	            return false;
-            	        }
-        	    }
-
-        	    public boolean isEmpty() {
-                    if (this.state == status.Empty) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+    public boolean isEmpty() {
+        if (this.state == status.Empty) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public boolean isOptional() {
-        	        if (this.state == status.Optional) {
-            	            return true;
-            	        }
+        if (this.state == status.Optional) {
+            return true;
+        }
 
-        	        return false;
-        	    }
-
-
+        return false;
+    }
     @Override
     public String toString() {
-
-
         return "\t" +state.toString() +"\t [" + positionX +" , " + positionY +"]" ;
     }
 }

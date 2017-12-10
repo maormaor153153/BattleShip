@@ -12,16 +12,12 @@ public class GridButton extends android.support.v7.widget.AppCompatButton {
     private int positionY;
     public boolean isShip;
     public boolean isPlaced;
-
-
     public GridButton(Context context) {
         super(context);
         this.isShip = false;
         this.isPlaced = false;
 
     }
-
-
     public int getPositionY() {
         return positionY;
     }
@@ -37,18 +33,15 @@ public class GridButton extends android.support.v7.widget.AppCompatButton {
     public void setPositionX(int positionX) {
         this.positionX = positionX;
     }
-
     public boolean isShip() {
         return isShip;
     }
-
     public void setShip(boolean ship) {
         isShip = ship;
     }
     public void setPlaced(boolean placed) {
         isPlaced = placed;
     }
-
     public boolean isPlaced() {
         return isPlaced;
     }

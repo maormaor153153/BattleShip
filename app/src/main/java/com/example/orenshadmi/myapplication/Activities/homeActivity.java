@@ -1,12 +1,9 @@
 package com.example.orenshadmi.myapplication.Activities;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.widget.TextView;
-
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +13,10 @@ import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
-
 import com.example.orenshadmi.myapplication.R;
 
 public class homeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = homeActivity.class.getSimpleName();
     GameLogicNew gameLogic = GameLogicNew.getInstance();
     boolean isLevelPicked = false;
 
@@ -29,7 +24,7 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.home_activity);
+        // setContentView(R.layout.home_activity);
         overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(R.layout.home_activity);
 
@@ -37,10 +32,6 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
         mainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                EditText urlEditText = (EditText) findViewById(R.id.image_url_edit_text);
-//                String imageUrl = urlEditText.getText().toString();
-//                downloadImage(imageUrl, (ImageView) findViewById(R.id.image_view));
-                //  startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
                 if (isLevelPicked) {
                     startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
                 } else {
@@ -55,35 +46,27 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         Button rulesButton = findViewById(R.id.rules);
-        	        rulesButton.setOnClickListener(new View.OnClickListener(){
-	            public void onClick(View view) {
-                	                startActivity(new Intent(getApplicationContext(), RuleActivity.class));
-                	            }
-	        });
-
-        	        TextView tx = findViewById(R.id.battleshiptitle);
-        	        //Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Sansaul_Petronika.ttf");
-        	       // tx.setTypeface(custom_font);
-        	        tx.setTextColor(Color.BLACK);
+        rulesButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), RuleActivity.class));
+            }
+        });
+        TextView tx = findViewById(R.id.battleshiptitle);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Sansaul_Petronika.ttf");
+        tx.setTypeface(custom_font);
+        tx.setTextColor(Color.BLACK);
 
         chooseGameLevel();
 
     }
     private void chooseGameLevel() {
-        LinearLayout linearLayout =  findViewById(R.id.levels);
-
+        LinearLayout linearLayout = findViewById(R.id.levels);
         int size = linearLayout.getChildCount();
-
-        for ( int i = 0 ; i < size ; i++){
-            Button button = (Button)linearLayout.getChildAt(i);
-            button.setTag((i+1));
-
+        for (int i = 0; i < size; i++) {
+            Button button = (Button) linearLayout.getChildAt(i);
+            button.setTag((i + 1));
             button.setOnClickListener(this);
-
-
         }
-
-
     }
     @Override
     public void onClick(View v) {
@@ -98,7 +81,6 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
     private void setAllButtonThatNotQueuedToShape(int tag, ViewParent parent) {
         if( parent instanceof LinearLayout){
             LinearLayout linearLayout = (LinearLayout)parent;
@@ -110,10 +92,7 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
                     Drawable shape = getResources().getDrawable( R.drawable.shape);
                     	                    gameLevelButton.setBackgroundDrawable(shape);
                 }
-
             }
-
         }
     }
-
 }

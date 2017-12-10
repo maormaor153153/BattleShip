@@ -28,36 +28,48 @@
 
 
     <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-        android:textColor="@color/blue"
-    android:text="                                                             Blue is Miss    "
-    android:id="@+id/textblue" />
+        android:id="@+id/textblue"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/player_layout"
+        android:layout_marginEnd="46dp"
+        android:layout_marginRight="46dp"
+        android:text="@string/bluetext"
+        android:textColor="@color/blue" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/textred"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textblack"
+        android:layout_alignStart="@+id/textblack"
         android:layout_below="@+id/textblue"
-        android:textColor="@color/red"
+        android:text="@string/redtext"
+        android:textColor="@color/red" />
 
-        android:text="                                                             Red is Attacked    "
-        android:id="@+id/textred" />
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/textblack"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textblue"
+        android:layout_alignRight="@+id/textblue"
         android:layout_below="@+id/textred"
-        android:textColor="@color/black"
-
-        android:text="                                                             Black is Ship    "
-        android:id="@+id/textblack" />
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp"
+        android:text="@string/blacktext"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/turn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textSize="30dp"
-        android:text="how turn"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="how turn"
+        android:textSize="30dp" />
 
 
 

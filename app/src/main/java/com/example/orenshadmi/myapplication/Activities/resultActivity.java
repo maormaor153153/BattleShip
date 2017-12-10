@@ -29,9 +29,9 @@ public class resultActivity extends AppCompatActivity {
         TextView text =  findViewById(R.id.textView);
         text.setText(states);
 
-       // Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Sansaul_Petronika.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Sansaul_Petronika.ttf");
 
-       // text.setTypeface(custom_font);
+        text.setTypeface(custom_font);
         text.setTextColor(Color.BLACK);
 
         Button playAgainBt = findViewById(R.id.again);

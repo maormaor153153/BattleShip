@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#66FF99"
-
     tools:context="com.example.orenshadmi.myapplication.Activities.resultActivity">
 
     <TextView
@@ -22,8 +21,6 @@
         android:gravity="center"
         android:textSize="100dp" />
 
-
-
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="wrap_content"
@@ -33,10 +30,8 @@
         android:layout_marginBottom="96dp"
         android:orientation="vertical"
         >
-
         <Button
             android:id="@+id/again"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -45,7 +40,6 @@
             android:text="@string/Again" />
 
         <Button
-
             android:id="@+id/return_to_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Battle Ship</string>
     <string name="Level_Easy">Level Easy</string>
     <string name="Again">play again</string>
     <color name="blue">#ff0000ff</color>
     <color name="red">#ffff0000</color>
     <color name="black">#ff444444</color>
-
+    <string name="blacktext">Black is Ship</string>
+    <string name="bluetext">Miss is Ship</string>
+    <string name="redtext">Red is Attacked</string>
     <string name="title_activity_scrolling">RulesActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
