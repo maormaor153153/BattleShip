@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.ViewParent;ען
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
