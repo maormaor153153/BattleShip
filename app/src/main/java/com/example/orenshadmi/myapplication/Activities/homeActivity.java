@@ -40,6 +40,7 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
 
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
+                    //here
                 }
             }
         });
