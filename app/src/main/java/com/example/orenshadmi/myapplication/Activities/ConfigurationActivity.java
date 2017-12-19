@@ -68,7 +68,6 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
                 }
             }
         });
-
     }
     @Override
     protected void onResume() {
@@ -104,7 +103,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
         Point size = new Point();
         display.getSize(size);
         int screenWidth = size.x;
-        LinearLayout linearLayout = findViewById(id.linear_layout); // TODO:
+        LinearLayout linearLayout = findViewById(id.linear_layout);
         int cellSize = screenWidth / numOfShips;
         if (gameLevel == EASY) {
             cellSize -= 220;
@@ -178,6 +177,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
                         gridButton.setBackgroundDrawable(white);
                     }
                 }).start();
+                gameLogic.setEmptyIfNotOccupied(gameLogic.getPlayerBoard());
             } else {
                 boolean placed = gameLogic.placeUserShips(gridButton.getPositionX(), gridButton.getPositionY());
                 if (placed) {

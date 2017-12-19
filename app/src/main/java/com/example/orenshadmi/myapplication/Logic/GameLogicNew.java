@@ -19,9 +19,10 @@ public class GameLogicNew {
     private static final int[] SIZE_OF_SHIPS = new int[]{2, 3, 3, 4, 5};
     private static int size;
     private static int gameLevel;
-    public static GameLogicNew getInstance() {
-        return ourInstance;
-    }
+
+        public static GameLogicNew getInstance() {
+            return ourInstance;
+        }
 
     private GameLogicNew() {
         this.size = 0;
@@ -139,7 +140,7 @@ public class GameLogicNew {
         }
         return false;
     }
-    private static void setEmptyIfNotOccupied(Board board) {
+    public static void setEmptyIfNotOccupied(Board board) {
         for (int i = 0; i < board.getROWS(); i++) {
             for (int j = 0; j < board.getCOLS(); j++) {
                 if (!(board.getMat()[i][j].isOccupied())) {
@@ -306,7 +307,9 @@ public class GameLogicNew {
             }
             if(flagForDead == true && (!computerBoard.getFleet().get(i).getState().toString().equals(Ship.configStatus.dead.toString())))
             {
+
                 computerBoard.getFleet().get(i).setState(Ship.configStatus.dead);
+
                 forReturn = i;
             }
         }

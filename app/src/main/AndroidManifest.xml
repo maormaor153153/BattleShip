@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
+
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCu6EmIh9zazcRLfcZTqohNWN1Jn6BBJr4"/>
+
         <activity android:name=".Activities.homeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,10 +19,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ConfigurationActivity" />
-        <activity android:name=".Activities.GameActivity" />
+        <activity
+            android:name=".Activities.ConfigurationActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".Activities.GameActivity"
+            android:noHistory="true" />
         <activity android:name=".Activities.resultActivity" />
-        <activity android:name=".Activities.RuleActivity"></activity>
+        <activity
+            android:name=".Activities.RuleActivity"
+            android:noHistory="true" />
+        <activity android:name=".Activities.MapActivity"></activity>
     </application>
 
 </manifest>

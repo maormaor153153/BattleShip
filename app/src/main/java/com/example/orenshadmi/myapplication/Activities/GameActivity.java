@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Classes.Coordinate;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
+
+
 import com.example.orenshadmi.myapplication.R;
 import com.example.orenshadmi.myapplication.Views.GridButton;
 import com.example.orenshadmi.myapplication.Classes.Board;
@@ -32,6 +34,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private static final  int MEDIUM__GRID_SIZE = 7;
     private static final int HARD__GRID_SIZE = 10;
     private static int  gameLevel;
+    private static final String Computer_Turn="Computer turn";
+    private static final String Player_Turn = "Your turn";
 
     GameLogicNew gameLogic = GameLogicNew.getInstance();
     Handler handler = new Handler();
@@ -101,6 +105,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             gridLayout.addView(gridButton);
         }
     }
+    @SuppressLint("NewApi")
     public void createPlayerBoard() { // This Board in Up Top
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -125,7 +130,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             gridButton.setPositionX(i / gridLayout.getColumnCount());
             gridButton.setPositionY(i % gridLayout.getColumnCount());
             if (playerBoard[i / gridLayout.getColumnCount()][i % gridLayout.getColumnCount()].isOccupied()) {
-                gridButton.setBackgroundColor(0xff000000);
+                Drawable playerShip = ContextCompat.getDrawable(this, R.drawable.playership);
+                gridButton.setBackground(playerShip);
             } else {
                 Drawable border = ContextCompat.getDrawable(this, R.drawable.shape);
                 gridButton.setBackgroundDrawable(border);
@@ -140,7 +146,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         TextView turn = findViewById(R.id.turn);
-        turn.setText("It's your turn");
+        turn.setText(Player_Turn);
         int flagDestroyed;
         if (v instanceof GridButton) {
             final GridButton gridButton = (GridButton) v;
@@ -165,7 +171,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     toast.show();
                 }
                 WinPlayer();
-                turn.setText("It's Computer turn");
+                turn.setText(Computer_Turn);
                 forDelayComputerDisable();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -176,7 +182,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
 
-                }, 2000);
+                }, 1000);
             } else if (gameLogic.wasAttackedComputer(gridButton.getPositionX(), gridButton.getPositionY()) == false) {
                 v.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
                     @Override
@@ -185,8 +191,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }).start();
                 gameLogic.updateMissPlayer(gridButton.getPositionX(), gridButton.getPositionY());
-                gridButton.setBackgroundColor(0xff0000ff);
-                turn.setText("It's Computer turn");
+
+                Drawable miss = ContextCompat.getDrawable(this, R.drawable.miss);
+                gridButton.setBackground(miss);
+                turn.setText(Computer_Turn);
                 forDelayComputerDisable();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -195,7 +203,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         computerAttack();
 
                     }
-                }, 2000);
+                }, 1000);
             }
 
         }
@@ -227,10 +235,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                flagDestroyed = gameLogic.destroyedShipByComputer(gridButton.getPositionX(), gridButton.getPositionY());
                if (flagDestroyed >= 0) {
                    Context context = getApplicationContext();
-                   CharSequence text = "Your ship destroyed by computer ";
+                   CharSequence text = "Ship destroyed!";
                    int duration = Toast.LENGTH_SHORT;
                    Toast toast = Toast.makeText(context, text, duration);
                    toast.show();
+
                }
                WinComputer();
                flagforexit = true;
@@ -242,26 +251,27 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                    }
                }).start();
                gameLogic.updateMissComputer(gridButton.getPositionX(), gridButton.getPositionY());
-               gridButton.setBackgroundColor(0xff0000ff);
+               Drawable miss = ContextCompat.getDrawable(this, R.drawable.miss);
+               gridButton.setBackground(miss);
                flagforexit = true;
            }
        }
         while(flagforexit != true);
-        turn.setText("It's your turn");
+        turn.setText(Player_Turn);
     }
     private int foundLevelGame() {
         Random rand = new Random();
         if(gameLevel ==EASY)
         {
-            return rand.nextInt(24)+1;
+            return rand.nextInt(24)+0;
         }
         if(gameLevel ==MEDIUM)
         {
-            return rand.nextInt(48)+1;
+            return rand.nextInt(48)+0;
         }
         if(gameLevel ==HARD)
         {
-            return rand.nextInt(99) + 1;
+            return rand.nextInt(99) + 0;
         }
         return 0;
     }
@@ -344,7 +354,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             computerLayout.getChildAt(i).setEnabled(true);
         }
     }
-
 }
 
 

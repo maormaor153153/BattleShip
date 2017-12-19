@@ -86,6 +86,8 @@ public class Coordinate {
             return false;
         }
     }
+
+
     public boolean isOptional() {
         if (this.state == status.Optional) {
             return true;

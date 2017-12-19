@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.ViewParent;
+import android.view.ViewParent;ען
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
@@ -24,14 +24,13 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.home_activity);
         overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(R.layout.home_activity);
 
         Button mainButton = (Button) findViewById(R.id.startgame);
         mainButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)  {
                 if (isLevelPicked) {
                     startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
                 } else {
@@ -51,6 +50,15 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(getApplicationContext(), RuleActivity.class));
             }
         });
+
+        Button mapButtoon = findViewById(R.id.map);
+        mapButtoon.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), MapActivity.class));
+            }
+        });
+
+
         TextView tx = findViewById(R.id.battleshiptitle);
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Sansaul_Petronika.ttf");
         tx.setTypeface(custom_font);

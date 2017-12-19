@@ -26,49 +26,12 @@
         android:rowCount="10"
         android:layout_marginTop="10dip"/>
 
-
-    <TextView
-        android:id="@+id/textblue"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/player_layout"
-        android:layout_marginEnd="46dp"
-        android:layout_marginRight="46dp"
-        android:text="@string/bluetext"
-        android:textColor="@color/blue" />
-
-    <TextView
-        android:id="@+id/textred"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textblack"
-        android:layout_alignStart="@+id/textblack"
-        android:layout_below="@+id/textblue"
-        android:text="@string/redtext"
-        android:textColor="@color/red" />
-
-    <TextView
-        android:id="@+id/textblack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/textblue"
-        android:layout_alignRight="@+id/textblue"
-        android:layout_below="@+id/textred"
-        android:layout_marginEnd="27dp"
-        android:layout_marginRight="27dp"
-        android:text="@string/blacktext"
-        android:textColor="@color/black" />
-
     <TextView
         android:id="@+id/turn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="how turn"
+        android:layout_centerInParent="true"
         android:textSize="30dp" />
 
 
