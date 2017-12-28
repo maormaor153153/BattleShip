@@ -45,5 +45,22 @@ public class GridButton extends android.support.v7.widget.AppCompatButton {
     public boolean isPlaced() {
         return isPlaced;
     }
+    public int findChildByCoordtion(int x , int y,int gamelevel)
+    {
+        int child = 0;
+
+        for(int i = 0 ; i < gamelevel ; i++)
+        {
+            for(int g = 0 ; g < gamelevel ; g++)
+            {
+                if(x ==  i && y == g)
+                {
+                    return child;
+                }
+                child++;
+            }
+        }
+        return 0;
+    }
 
 }

@@ -37,7 +37,7 @@ public class GameLogicNew {
     }
 
 
-    public static int getGameLevel() {
+    public  int getGameLevel() {
         return gameLevel;
     }
     public void setGameLevel(int gameLevel) {
@@ -354,6 +354,18 @@ public class GameLogicNew {
     }
     public void updateMissComputer(int positionX, int positionY) {
         playerBoard.updateMiss(playerBoard, positionX, positionY);
+    }
+
+    public int gamelevelForGridButoon(int numberofLevell)
+    {
+        if (numberofLevell == 1) {
+            return 5;
+        } else if (numberofLevell == 2) {
+            return 7;
+        } else if (numberofLevell == 3) {
+            return 10;
+        }
+        return -1;
     }
 }
 

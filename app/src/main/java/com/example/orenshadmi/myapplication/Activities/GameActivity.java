@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +170,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
+                    for(int i = 0 ; i < gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().size() ;i++)
+                    {
+                        int number;
+                        Drawable destroyed = getResources().getDrawable(R.drawable.destroyed);
+                        number =  gridButton.findChildByCoordtion(gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionX(),
+                                gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionY(),
+                                gameLogic.gamelevelForGridButoon(gameLevel));
+                        View gridButtoN;
+                        GridLayout gridLayoutattck = findViewById(R.id.computer_layout);
+                        gridButtoN = gridLayoutattck.getChildAt(number);
+                        gridButtoN.setBackground(destroyed);
+                    }
                 }
                 WinPlayer();
                 turn.setText(Computer_Turn);
@@ -240,6 +253,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                    Toast toast = Toast.makeText(context, text, duration);
                    toast.show();
 
+
                }
                WinComputer();
                flagforexit = true;
@@ -297,10 +311,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             Coordinate[][] board = gameLogic.getComputerBoard().getMat();
 
+
             int squaresCount = gridLayout.getColumnCount() * gridLayout.getRowCount();
             for (int i = 0; i < squaresCount; i++) {
                 if (board[i / gridLayout.getRowCount()][i % gridLayout.getColumnCount()].isOccupied()) {
                     GridButton button = (GridButton) gridLayout.getChildAt(i);
+
+
+
                 }
 
                 if (board[i / gridLayout.getRowCount()][i % gridLayout.getColumnCount()].isAvailable()) {
@@ -313,6 +331,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     Drawable empty = ContextCompat.getDrawable(this, R.drawable.shape);
                     button.setBackgroundDrawable(empty);
                 }
+
             }
         }
     }
@@ -354,6 +373,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             computerLayout.getChildAt(i).setEnabled(true);
         }
     }
+
+
+
 }
 
 

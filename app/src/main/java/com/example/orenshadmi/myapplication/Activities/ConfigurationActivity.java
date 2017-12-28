@@ -28,7 +28,6 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
 
     GameLogicNew gameLogic = GameLogicNew.getInstance();
     private int shipSize;
-    //MAOR IS GAYS
     LinearLayout linearLayout;
     private static final int EASY = 1;
     private static final  int MEDIUM = 2;
