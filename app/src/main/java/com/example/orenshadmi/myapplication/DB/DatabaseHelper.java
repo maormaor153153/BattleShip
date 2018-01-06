@@ -12,6 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_1 = "ID";
     public static final String COL_2 = "NAME";
     public static final String COL_3 = "SURNAME";
+
     public static final String COL_4 = "SCORE";
 
     public DatabaseHelper(Context context) {
