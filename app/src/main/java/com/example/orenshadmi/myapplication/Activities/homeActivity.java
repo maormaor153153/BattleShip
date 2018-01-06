@@ -24,8 +24,9 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(R.layout.home_activity);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+
 
         Button mainButton = (Button) findViewById(R.id.startgame);
         mainButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +59,14 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(getApplicationContext(), MapActivity.class));
             }
         });
+
+        Button recordsButton = findViewById(R.id.records);
+        recordsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), RecordsActivity.class));
+            }
+        });
+
 
 
         TextView tx = findViewById(R.id.battleshiptitle);

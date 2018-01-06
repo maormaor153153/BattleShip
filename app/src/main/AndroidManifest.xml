@@ -3,6 +3,7 @@
     package="com.example.orenshadmi.myapplication">
 
     <application
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,11 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCu6EmIh9zazcRLfcZTqohNWN1Jn6BBJr4"/>
+        <uses-library android:name="com.google.android.maps" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCu6EmIh9zazcRLfcZTqohNWN1Jn6BBJr4" />
 
         <activity android:name=".Activities.homeActivity">
             <intent-filter>
@@ -19,17 +24,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activities.ConfigurationActivity"
             android:noHistory="true" />
+
         <activity
             android:name=".Activities.GameActivity"
             android:noHistory="true" />
-        <activity android:name=".Activities.resultActivity" />
+
+        <activity android:name=".Activities.ResultActivity" />
+
         <activity
             android:name=".Activities.RuleActivity"
             android:noHistory="true" />
-        <activity android:name=".Activities.MapActivity"></activity>
+        <activity
+            android:name=".Activities.MapActivity"
+            android:noHistory="true" />
+        <activity android:name=".Activities.RecordsActivity"></activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 </manifest>
