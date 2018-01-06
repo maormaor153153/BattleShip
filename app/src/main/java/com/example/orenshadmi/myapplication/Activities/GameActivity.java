@@ -204,7 +204,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }).start();
                 gameLogic.updateMissPlayer(gridButton.getPositionX(), gridButton.getPositionY());
-
+                gameLogic.incrementNumOfMisses();
                 Drawable miss = ContextCompat.getDrawable(this, R.drawable.miss);
                 gridButton.setBackground(miss);
                 turn.setText(Computer_Turn);
@@ -342,7 +342,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         String status = "You Win";
 
         if (flag == true) {
-            Intent intent = new Intent(GameActivity.this, resultActivity.class);
+            gameLogic.calculateTotalScore();
+            Log.d("Score", "" + gameLogic.getPlayerScore());
+            Intent intent = new Intent(GameActivity.this, ResultActivity.class);
             intent.putExtra("status", status);
             startActivity(intent);
         }
@@ -352,7 +354,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         flag = gameLogic.winComputerLog();
         String status = "You Lose";
         if (flag == true) {
-            Intent intent = new Intent(GameActivity.this, resultActivity.class);
+            Intent intent = new Intent(GameActivity.this, ResultActivity.class);
             intent.putExtra("status", status);
             startActivity(intent);
         }

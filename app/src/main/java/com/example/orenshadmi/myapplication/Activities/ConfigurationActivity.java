@@ -97,6 +97,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
             gameLogic.createBoards(HARD__GRID_SIZE);
             this.numOfShips = 5;
         }
+        gameLogic.setMissValue();
     }
     private LinearLayout createShips() {
         Display display = getWindowManager().getDefaultDisplay();

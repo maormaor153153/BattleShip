@@ -1,7 +1,6 @@
 package com.example.orenshadmi.myapplication.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 
@@ -13,14 +12,16 @@ import android.widget.TextView;
 
 import com.example.orenshadmi.myapplication.R;
 
-public class resultActivity extends AppCompatActivity {
+public class ResultActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+
 
         setContentView(R.layout.activity_result);
+
+        overridePendingTransition(R.anim.enter, R.anim.exit);
 
 
         Intent intent = getIntent();
