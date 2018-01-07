@@ -1,6 +1,5 @@
 package com.example.orenshadmi.myapplication.Activities;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +17,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.view.ViewParent;
 import android.widget.TextView;
@@ -25,8 +25,6 @@ import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Classes.Coordinate;
 import com.example.orenshadmi.myapplication.Classes.Ship;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
-
-
 import com.example.orenshadmi.myapplication.R;
 import com.example.orenshadmi.myapplication.Views.GridButton;
 import com.example.orenshadmi.myapplication.Classes.Board;
@@ -44,29 +42,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private static int  gameLevel;
     private static final String Computer_Turn="Computer turn";
     private static final String Player_Turn = "Your turn";
-    boolean isHit;
     float[] sensorSamplingFirst = new float[3]; //X Y Z
 
-        	    MyService mService;
-	    boolean mBound = false;
+    MyService mService;
+    boolean mBound = false;
     GameLogicNew gameLogic = GameLogicNew.getInstance();
     Handler handler = new Handler();
-
-    @TargetApi(Build.VERSION_CODES.ECLAIR)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(R.layout.activity_game);
-       // startService();
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+        startService();
     }
-
     protected void onStart() {
-       	        super.onStart();
-        	        // Bind to LocalService
-        	        Intent intent = new Intent(this, MyService.class);
-        	        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        	    }
+        super.onStart();
+        // Bind to LocalService
+        Intent intent = new Intent(this, MyService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -74,31 +69,31 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         createPlayerBoard();
         createBotBoard();
         updateBoard((GridLayout)findViewById(R.id.computer_layout));
+
         getSensorAccelemetorForStart();
     }
     @Override
-	    protected void onStop() {
-        	        super.onStop();
-                unbindService(mConnection);
-                mBound = false;
-            }
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnection);
+        mBound = false;
+    }
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
 
-            /** Defines callbacks for service binding, passed to bindService() */
-        	    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            MyService.LocalBinder binder = (MyService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
 
-       	        @Override
-	        public void onServiceConnected(ComponentName className, IBinder service) {
-                        // We've bound to LocalService, cast the IBinder and get LocalService instance
-                        MyService.LocalBinder binder = (MyService.LocalBinder) service;
-            	            mService = binder.getService();
-                        mBound = true;
-                   }
-
-      	        @Override
+        @Override
         public void onServiceDisconnected(ComponentName arg0) {
-           	            mBound = false;
-                    }
-	    };
+            mBound = false;
+        }
+    };
     private void setGridsByGameLevel() {
         this.gameLevel = gameLogic.getGameLevel();
         GridLayout playerLayout = findViewById(R.id.player_layout);
@@ -271,13 +266,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             final GridButton gridButton = (GridButton) gridButtoN;
 
             if(onlyOne == 0) {
-                checkIfSensorCheckingAllTheTime(gridButton);
+                 checkIfSensorCheckingAllTheTime(gridButton);
                 onlyOne++;
-
             }
-
-
-
             flagForComputer = gameLogic.attackPlayerBoard(gridButton.getPositionX(), gridButton.getPositionY());
             if (gameLogic.wasMissComputer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
             } else if (flagForComputer == true) {
@@ -413,20 +404,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             computerLayout.getChildAt(i).setEnabled(false);
         }
     }
-    public void forDelayComputerEnabled()
-    {
+    public void forDelayComputerEnabled() {
         GridLayout computerLayout =  findViewById(R.id.computer_layout);
         for(int i = 0 ; i <foundChildLevelGame();i++)
         {
             computerLayout.getChildAt(i).setEnabled(true);
         }
     }
-
-
-
     @SuppressLint("NewApi")
-    public void destroyedFullShipByPlayer(int flagDestroyed , GridButton gridButton)
-    {
+    public void destroyedFullShipByPlayer(int flagDestroyed , GridButton gridButton) {
         Context context = getApplicationContext();
         CharSequence text = "Your destroyed ship";
         int duration = Toast.LENGTH_SHORT;
@@ -468,9 +454,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
-
-
+    private void startService() {
+        Button buttonService = (Button) findViewById(R.id.Service);
+        buttonService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBound) {
+                    // Call a method from the LocalService.
+                    // However, if this call were something that might hang, then this request should
+                    // occur in a separate thread to avoid slowing down the activity performance.
+                    int num = mService.getRandomNumber();
+                    Log.d("service ","num:"+num);
+                }
+            }
+        });
+    }
     private void getSensorAccelemetorForStart() {
         handler.postDelayed(new Runnable() {
 
@@ -486,7 +484,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }, 1000);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void checkIfSensorCheckingAllTheTime(GridButton gridButton) {
 

@@ -41,7 +41,9 @@
         <activity
             android:name=".Activities.MapActivity"
             android:noHistory="true" />
-        <activity android:name=".Activities.RecordsActivity"></activity>
+        <activity android:name=".Activities.RecordsActivity">
+        </activity>
+        <service android:name=".Activities.MyService"></service>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
