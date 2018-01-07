@@ -12,8 +12,10 @@ public class RuleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(R.layout.activity_rule);
+
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Sansaul_Petronika.ttf");
         TextView tx = findViewById(R.id.rules_title);
          tx.setTypeface(custom_font);

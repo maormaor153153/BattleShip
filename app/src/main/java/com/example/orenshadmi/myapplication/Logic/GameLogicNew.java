@@ -10,7 +10,9 @@ import java.util.ArrayList;
  */
 
 public class GameLogicNew {
+
     private static final GameLogicNew ourInstance = new GameLogicNew();
+    private static final int SCORE_VALUE = 100;
     private static boolean isFirstClick ;
     private static Coordinate firstClick;
     private static Coordinate secondClick;
@@ -19,18 +21,41 @@ public class GameLogicNew {
     private static final int[] SIZE_OF_SHIPS = new int[]{2, 3, 3, 4, 5};
     private static int size;
     private static int gameLevel;
+    private static int numOfMiss;
+    private static  double missValue ;
+    public static double playerScore;
 
-        public static GameLogicNew getInstance() {
-            return ourInstance;
-        }
+
+
+    public  void setMissValue() {
+        int numOfCellsInMat = playerBoard.getROWS() * playerBoard.getCOLS();
+        int numOfShips = getTotalLengthOfShips();
+
+        this.missValue = (numOfCellsInMat / (numOfCellsInMat - numOfShips)) ;
+    }
+
+    public void incrementNumOfMisses(){
+        this.numOfMiss ++;
+    }
+
+    public void calculateTotalScore(){
+        this.playerScore = SCORE_VALUE - (numOfMiss * missValue);
+    }
+
+    public static GameLogicNew getInstance() {
+        return ourInstance;
+    }
 
     private GameLogicNew() {
+        this.numOfMiss = 0;
         this.size = 0;
         this.isFirstClick = true;
     }
     public static void setSize(int size) {
-        	        GameLogicNew.size = size;
-        	    }
+        GameLogicNew.size = size;
+    }
+
+
     public void createBoards(int size) {
         this.playerBoard = new Board(size);
         this.computerBoard = new Board(size);
@@ -43,6 +68,8 @@ public class GameLogicNew {
     public void setGameLevel(int gameLevel) {
         this.gameLevel = gameLevel;
     }
+
+
     public Board createComputerBoard() { //TODO: random
         Board computerBoard = getComputerBoard();
         Random rand = new Random();
@@ -90,7 +117,18 @@ public class GameLogicNew {
         return null;
     }
 
-    private int getNumOfShipsByGamLevel(int gameLevel) {
+    private static int getTotalLengthOfShips() {
+        int totalLength = 0;
+        int numOfShips = getNumOfShipsByGamLevel(gameLevel);
+
+        for( int i = 0 ; i < numOfShips ; i++){
+            totalLength += getShipSizeByIndex(i);
+        }
+
+        return totalLength;
+    }
+
+    private static int getNumOfShipsByGamLevel(int gameLevel) {
         if (gameLevel == 1) {
             return 2;
         } else if (gameLevel == 2) {
@@ -242,14 +280,14 @@ public class GameLogicNew {
         return false;
     }
     public static void addShipToFleet(Board board, Ship ship){
-        	        board.getFleet().add(ship);
-        	    }
-        	    public void printfleet(Board board){
-        	        for (int i = 0 ; i < board.getFleet().size(); i ++){
-            	          Log.d("Fleet: ",board.getFleet().get(i).getShipCoordinates().toString());
+        board.getFleet().add(ship);
+    }
+    public void printfleet(Board board){
+        for (int i = 0 ; i < board.getFleet().size(); i ++){
+            Log.d("Fleet: ",board.getFleet().get(i).getShipCoordinates().toString());
 
-            	        }
-        	    }
+        }
+    }
     public static Board getPlayerBoard() {
         return playerBoard;
     }
@@ -296,14 +334,14 @@ public class GameLogicNew {
             for (int j = 0; j < computerBoard.getFleet().get(i).getShipCoordinates().size(); j++) {
                 if (computerBoard.getFleet().get(i).getShipCoordinates().get(j).getPositionX() == positionX &&
                         computerBoard.getFleet().get(i).getShipCoordinates().get(j).getPositionY() == positionY) {
-                        computerBoard.getFleet().get(i).getShipCoordinates().get(j).setState(Coordinate.status.Attacked );
+                    computerBoard.getFleet().get(i).getShipCoordinates().get(j).setState(Coordinate.status.Attacked );
                 }
             }
             for (int j = 0; j < computerBoard.getFleet().get(i).getShipCoordinates().size(); j++) {
-                        if(!computerBoard.getFleet().get(i).getShipCoordinates().get(j).getState().toString().equals(Coordinate.status.Attacked.toString()))
-                        {
-                            flagForDead = false;
-                        }
+                if(!computerBoard.getFleet().get(i).getShipCoordinates().get(j).getState().toString().equals(Coordinate.status.Attacked.toString()))
+                {
+                    flagForDead = false;
+                }
             }
             if(flagForDead == true && (!computerBoard.getFleet().get(i).getState().toString().equals(Ship.configStatus.dead.toString())))
             {
@@ -350,10 +388,35 @@ public class GameLogicNew {
         return flag;
     }
     public void updateMissPlayer(int positionX, int positionY) {
-         computerBoard.updateMiss(computerBoard, positionX, positionY);
+        computerBoard.updateMiss(computerBoard, positionX, positionY);
     }
     public void updateMissComputer(int positionX, int positionY) {
         playerBoard.updateMiss(playerBoard, positionX, positionY);
     }
-}
 
+    public int gamelevelForGridButoon(int numberOflevel)
+    {
+
+        if (numberOflevel == 1) {
+            return 5;
+        } else if (numberOflevel == 2) {
+            return 7;
+        } else if (numberOflevel == 3) {
+            return 10;
+        }
+        return 0;
+    }
+
+    public static int getNumOfMiss() {
+        return numOfMiss;
+    }
+
+    public static double getMissValue() {
+        return missValue;
+    }
+
+    public static double getPlayerScore() {
+        return playerScore;
+    }
+
+}

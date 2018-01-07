@@ -1,11 +1,17 @@
 package com.example.orenshadmi.myapplication.Activities;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,6 +23,7 @@ import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Classes.Coordinate;
+import com.example.orenshadmi.myapplication.Classes.Ship;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
 
 
@@ -37,17 +44,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private static int  gameLevel;
     private static final String Computer_Turn="Computer turn";
     private static final String Player_Turn = "Your turn";
+    boolean isHit;
+    float[] sensorSamplingFirst = new float[3]; //X Y Z
 
+        	    MyService mService;
+	    boolean mBound = false;
     GameLogicNew gameLogic = GameLogicNew.getInstance();
     Handler handler = new Handler();
 
+    @TargetApi(Build.VERSION_CODES.ECLAIR)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(R.layout.activity_game);
+       // startService();
     }
 
+    protected void onStart() {
+       	        super.onStart();
+        	        // Bind to LocalService
+        	        Intent intent = new Intent(this, MyService.class);
+        	        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        	    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -55,7 +74,31 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         createPlayerBoard();
         createBotBoard();
         updateBoard((GridLayout)findViewById(R.id.computer_layout));
+        getSensorAccelemetorForStart();
     }
+    @Override
+	    protected void onStop() {
+        	        super.onStop();
+                unbindService(mConnection);
+                mBound = false;
+            }
+
+            /** Defines callbacks for service binding, passed to bindService() */
+        	    private ServiceConnection mConnection = new ServiceConnection() {
+
+       	        @Override
+	        public void onServiceConnected(ComponentName className, IBinder service) {
+                        // We've bound to LocalService, cast the IBinder and get LocalService instance
+                        MyService.LocalBinder binder = (MyService.LocalBinder) service;
+            	            mService = binder.getService();
+                        mBound = true;
+                   }
+
+      	        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+           	            mBound = false;
+                    }
+	    };
     private void setGridsByGameLevel() {
         this.gameLevel = gameLogic.getGameLevel();
         GridLayout playerLayout = findViewById(R.id.player_layout);
@@ -151,6 +194,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int flagDestroyed;
         if (v instanceof GridButton) {
             final GridButton gridButton = (GridButton) v;
+
             flagPlayer = gameLogic.attckComputerBoard(gridButton.getPositionX(), gridButton.getPositionY());
             if (gameLogic.wasMissPlayer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
 
@@ -165,23 +209,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 gridButton.setBackgroundDrawable(occupied);
                 flagDestroyed = gameLogic.destroyedShipByPlayer(gridButton.getPositionX(), gridButton.getPositionY());
                 if (flagDestroyed >= 0) {
+                    destroyedFullShipByPlayer(flagDestroyed, gridButton);
                     Context context = getApplicationContext();
                     CharSequence text = "Your destroyed ship";
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-                    for(int i = 0 ; i < gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().size() ;i++)
-                    {
-                        int number;
-                        Drawable destroyed = getResources().getDrawable(R.drawable.destroyed);
-                        number =  gridButton.findChildByCoordtion(gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionX(),
-                                gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionY(),
-                                gameLogic.gamelevelForGridButoon(gameLevel));
-                        View gridButtoN;
-                        GridLayout gridLayoutattck = findViewById(R.id.computer_layout);
-                        gridButtoN = gridLayoutattck.getChildAt(number);
-                        gridButtoN.setBackground(destroyed);
-                    }
+
                 }
                 WinPlayer();
                 turn.setText(Computer_Turn);
@@ -225,51 +259,63 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void computerAttack() {
         TextView turn = findViewById(R.id.turn);
         boolean flagforexit = false;
-       do {
-           int randomIndex;
-           int flagDestroyed ;
-           randomIndex = foundLevelGame();
-           View gridButtoN;
-           GridLayout gridLayoutattck = findViewById(R.id.player_layout);
-           gridButtoN = gridLayoutattck.getChildAt(randomIndex);
-           final GridButton gridButton = (GridButton) gridButtoN;
-           flagForComputer = gameLogic.attackPlayerBoard(gridButton.getPositionX(), gridButton.getPositionY());
-           if (gameLogic.wasMissComputer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
-           } else if (flagForComputer == true) {
-               gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
-                   @Override
-                   public void run() {
-                       gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
-                   }
-               }).start();
-               Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
-               gridButton.setBackgroundDrawable(occupied);
+        int onlyOne = 0;
 
-               flagDestroyed = gameLogic.destroyedShipByComputer(gridButton.getPositionX(), gridButton.getPositionY());
-               if (flagDestroyed >= 0) {
-                   Context context = getApplicationContext();
-                   CharSequence text = "Ship destroyed!";
-                   int duration = Toast.LENGTH_SHORT;
-                   Toast toast = Toast.makeText(context, text, duration);
-                   toast.show();
+        do {
+            int randomIndex;
+            int flagDestroyed ;
+            randomIndex = foundLevelGame();
+            View gridButtoN;
+            GridLayout gridLayoutattck = findViewById(R.id.player_layout);
+            gridButtoN = gridLayoutattck.getChildAt(randomIndex);
+            final GridButton gridButton = (GridButton) gridButtoN;
+
+            if(onlyOne == 0) {
+                checkIfSensorCheckingAllTheTime(gridButton);
+                onlyOne++;
+
+            }
 
 
-               }
-               WinComputer();
-               flagforexit = true;
-           } else if (gameLogic.wasAttackedPlayer(gridButton.getPositionX(), gridButton.getPositionY()) == false) {
-               gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
-                   @Override
-                   public void run() {
-                       gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
-                   }
-               }).start();
-               gameLogic.updateMissComputer(gridButton.getPositionX(), gridButton.getPositionY());
-               Drawable miss = ContextCompat.getDrawable(this, R.drawable.miss);
-               gridButton.setBackground(miss);
-               flagforexit = true;
-           }
-       }
+
+            flagForComputer = gameLogic.attackPlayerBoard(gridButton.getPositionX(), gridButton.getPositionY());
+            if (gameLogic.wasMissComputer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
+            } else if (flagForComputer == true) {
+                gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
+                    }
+                }).start();
+                Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
+                gridButton.setBackgroundDrawable(occupied);
+
+                flagDestroyed = gameLogic.destroyedShipByComputer(gridButton.getPositionX(), gridButton.getPositionY());
+                if (flagDestroyed >= 0) {
+                    destroyedFullShipByComputer(flagDestroyed ,gridButton);
+                    Context context = getApplicationContext();
+                    CharSequence text = "Ship destroyed!";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+
+                }
+                WinComputer();
+                flagforexit = true;
+            } else if (gameLogic.wasAttackedPlayer(gridButton.getPositionX(), gridButton.getPositionY()) == false) {
+                gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
+                    }
+                }).start();
+                gameLogic.updateMissComputer(gridButton.getPositionX(), gridButton.getPositionY());
+                Drawable miss = ContextCompat.getDrawable(this, R.drawable.miss);
+                gridButton.setBackground(miss);
+                flagforexit = true;
+            }
+        }
         while(flagforexit != true);
         turn.setText(Player_Turn);
     }
@@ -303,7 +349,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         {
             return 99;
         }
-    return 0;
+        return 0;
     }
     private void updateBoard(ViewParent parent) {
         if(parent instanceof  GridLayout) {
@@ -344,7 +390,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (flag == true) {
             gameLogic.calculateTotalScore();
             Log.d("Score", "" + gameLogic.getPlayerScore());
-            Intent intent = new Intent(GameActivity.this, ResultActivity.class);
+            Intent intent = new Intent(GameActivity.this, resultActivity.class);
             intent.putExtra("status", status);
             startActivity(intent);
         }
@@ -354,7 +400,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         flag = gameLogic.winComputerLog();
         String status = "You Lose";
         if (flag == true) {
-            Intent intent = new Intent(GameActivity.this, ResultActivity.class);
+            Intent intent = new Intent(GameActivity.this, resultActivity.class);
             intent.putExtra("status", status);
             startActivity(intent);
         }
@@ -378,7 +424,124 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+    @SuppressLint("NewApi")
+    public void destroyedFullShipByPlayer(int flagDestroyed , GridButton gridButton)
+    {
+        Context context = getApplicationContext();
+        CharSequence text = "Your destroyed ship";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+        for(int i = 0 ; i < gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().size() ;i++)
+        {
+            int number;
+            Drawable destroyed = getResources().getDrawable(R.drawable.destroyed);
+            number =  gridButton.findChildByCoordtion(gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionX(),
+                    gameLogic.getComputerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionY(),
+                    gameLogic.gamelevelForGridButoon(gameLevel));
+            View gridButtoN;
+            GridLayout gridLayoutattck = findViewById(R.id.computer_layout);
+            gridButtoN = gridLayoutattck.getChildAt(number);
+            gridButtoN.setBackground(destroyed);
+        }
+    }
+    @SuppressLint("NewApi")
+    private void destroyedFullShipByComputer(int flagDestroyed, GridButton gridButton) {
+        Context context = getApplicationContext();
+        CharSequence text = "Ship destroyed!";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+        for(int i = 0 ; i < gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().size() ;i++)
+        {
+            int number;
+            Drawable destroyed = getResources().getDrawable(R.drawable.destroyed);
+            number =  gridButton.findChildByCoordtion(gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionX(),
+                    gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionY(),
+                    gameLogic.gamelevelForGridButoon(gameLevel));
+            View gridButtoN;
+            GridLayout gridLayoutattck = findViewById(R.id.player_layout);
+            gridButtoN = gridLayoutattck.getChildAt(number);
+            gridButtoN.setBackground(destroyed);
+        }
+
+
+    }
+
+
+
+    private void getSensorAccelemetorForStart() {
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                sensorSamplingFirst[0] = mService.getXaccelemetor();
+                sensorSamplingFirst[1] = mService.getYaccelemetor();
+                sensorSamplingFirst[2] = mService.getZaccelemetor();
+
+                Log.d("sensorSamplingFirst: X", " " + sensorSamplingFirst[0]);
+                Log.d("sensorSamplingFirst: Y", " " + sensorSamplingFirst[1]);
+                Log.d("sensorSamplingFirst: Z", " " + sensorSamplingFirst[2]);
+            }
+        }, 1000);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void checkIfSensorCheckingAllTheTime(GridButton gridButton) {
+
+        int flagDestroyed = 0;
+        boolean  flagForHere = false;
+        boolean stateForAttackBySensor = false;
+        if (sensorSamplingFirst[0] + 2 < mService.getXaccelemetor() || sensorSamplingFirst[0] - 2 > mService.getXaccelemetor()) {
+            stateForAttackBySensor = true;
+        }
+        if (sensorSamplingFirst[1] + 2 < mService.getYaccelemetor() || sensorSamplingFirst[1] - 2 > mService.getYaccelemetor()) {
+            stateForAttackBySensor = true;
+        }
+        if (sensorSamplingFirst[2] + 2 < mService.getZaccelemetor() || sensorSamplingFirst[2] - 2 > mService.getZaccelemetor()) {
+            stateForAttackBySensor = true;
+        }
+
+        Log.d("fleet", "size" + gameLogic.getPlayerBoard().getFleet().size());
+        Log.d("fleet", "state0" + gameLogic.getPlayerBoard().getFleet().get(0).getState().toString());
+        Log.d("fleet", "state1" + gameLogic.getPlayerBoard().getFleet().get(1).getState().toString());
+        if (stateForAttackBySensor == true) {
+
+            for (int i = 0; i < gameLogic.getPlayerBoard().getFleet().size(); i++) {
+                if (gameLogic.getPlayerBoard().getFleet().get(i).getState().toString().equals("placed"))
+                {
+                    Log.d("flagDestroyed","i:" +i);
+                    flagDestroyed = i;
+                    flagForHere = true;
+                    gameLogic.getPlayerBoard().getFleet().get(i).setState(Ship.configStatus.dead);
+                    for(int g = 0 ; g < gameLogic.getPlayerBoard().getFleet().get(i).getLength(); g++) {
+                        gameLogic.attackPlayerBoard(gameLogic.getPlayerBoard().getFleet().get(i).getShipCoordinates().get(g).getPositionX()
+                                , gameLogic.getPlayerBoard().getFleet().get(i).getShipCoordinates().get(g).getPositionY());
+                    }
+                    break;
+                }
+            }
+
+
+            for (int i = 0; i < gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().size(); i++) {
+                int number;
+                Drawable destroyed = getResources().getDrawable(R.drawable.destroyed);
+                number = gridButton.findChildByCoordtion(gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionX(),
+                        gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionY(),
+                        gameLogic.gamelevelForGridButoon(gameLevel));
+                View gridButtoN;
+                GridLayout gridLayoutattck = findViewById(R.id.player_layout);
+                gridButtoN = gridLayoutattck.getChildAt(number);
+                gridButtoN.setBackground(destroyed);
+            }
+
+        }
+        WinComputer();
+    }
+
 }
+
 
 
 

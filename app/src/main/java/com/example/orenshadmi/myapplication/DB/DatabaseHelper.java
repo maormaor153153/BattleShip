@@ -13,7 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_2 = "NAME";
     public static final String COL_3 = "SURNAME";
 
-    public static final String COL_4 = "SCORE";
+    public static final String COL_4 = "MARKS";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -30,12 +30,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String name, String surname, String score) {
+    public boolean insertData(String name, String surname, String mark) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2, name);
         contentValues.put(COL_3, surname);
-        contentValues.put(COL_4, score);
+        contentValues.put(COL_4, mark);
         long result = db.insert(TABLE_NAME, null, contentValues);
         if (result == -1)
             return false;
@@ -49,13 +49,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateData(String id, String name, String surname, String score){
+    public boolean updateData(String id, String name, String surname, String mark){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1, id);
         contentValues.put(COL_2, name);
         contentValues.put(COL_3, surname);
-        contentValues.put(COL_4, score);
+        contentValues.put(COL_4, mark);
         db.update(TABLE_NAME,contentValues,"ID = ?",new String[] { id });
         return true;
     }

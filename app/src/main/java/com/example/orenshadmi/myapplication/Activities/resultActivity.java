@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.orenshadmi.myapplication.R;
 
-public class ResultActivity extends AppCompatActivity {
+public class resultActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

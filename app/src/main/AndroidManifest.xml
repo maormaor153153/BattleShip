@@ -33,7 +33,7 @@
             android:name=".Activities.GameActivity"
             android:noHistory="true" />
 
-        <activity android:name=".Activities.ResultActivity" />
+        <activity android:name=".Activities.resultActivity" />
 
         <activity
             android:name=".Activities.RuleActivity"

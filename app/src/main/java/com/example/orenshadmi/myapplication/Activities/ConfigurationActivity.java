@@ -42,8 +42,9 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
         setContentView(layout.activity_configuration);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Sansaul_Petronika.ttf");
         TextView tx = findViewById(id.place_your_ships);
         tx.setTypeface(custom_font);
@@ -197,17 +198,17 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
 
         }
     }
-  private void SetAllButtonsThatNotPlacedToEnableShape(LinearLayout linearLayout, GridButton gridButton) {
-      int size = linearLayout.getChildCount();
-      for( int i = 0 ; i < size ; i++){
-          GridButton shipButton = (GridButton)linearLayout.getChildAt(i);
-          if(shipButton.isEnabled() && !(shipButton.equals(gridButton))){
-              shipButton.setPlaced(false);
-              Drawable shape = getResources().getDrawable( R.drawable.shape);
-              shipButton.setBackgroundDrawable(shape);
-          }
-      }
-  }
+    private void SetAllButtonsThatNotPlacedToEnableShape(LinearLayout linearLayout, GridButton gridButton) {
+        int size = linearLayout.getChildCount();
+        for( int i = 0 ; i < size ; i++){
+            GridButton shipButton = (GridButton)linearLayout.getChildAt(i);
+            if(shipButton.isEnabled() && !(shipButton.equals(gridButton))){
+                shipButton.setPlaced(false);
+                Drawable shape = getResources().getDrawable( R.drawable.shape);
+                shipButton.setBackgroundDrawable(shape);
+            }
+        }
+    }
     private void disableShipButtonThatPlaced(LinearLayout linearLayout) {
         for ( int i = 0; i < linearLayout.getChildCount();  i++ ) {
             GridButton button = (GridButton) linearLayout.getChildAt(i);
