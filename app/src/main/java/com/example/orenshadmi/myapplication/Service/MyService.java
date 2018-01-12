@@ -1,4 +1,4 @@
-package com.example.orenshadmi.myapplication.Activities;
+package com.example.orenshadmi.myapplication.Service;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -44,7 +43,7 @@ public class MyService extends Service implements SensorEventListener {
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
-        MyService getService() {
+        public MyService getService() {
             // Return this instance of MyService so clients can call public methods
             return MyService.this;
         }
@@ -60,7 +59,7 @@ public class MyService extends Service implements SensorEventListener {
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
-          Log.d(TAG,"onSensorChanged X:" +event.values[0] + "Y:" + event.values[1] + "Z:" + event.values[2]);
+         // Log.d(TAG,"onSensorChanged X:" +event.values[0] + "Y:" + event.values[1] + "Z:" + event.values[2]);
         X = event.values[0];
         Y = event.values[1];
         Z = event.values[2];
