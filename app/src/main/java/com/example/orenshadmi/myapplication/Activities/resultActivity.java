@@ -14,49 +14,64 @@ import com.example.orenshadmi.myapplication.R;
 
 public class resultActivity extends AppCompatActivity {
 
+
+    Button playAgainBt, returnToMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_result);
-
         overridePendingTransition(R.anim.enter, R.anim.exit);
 
-
         Intent intent = getIntent();
-        String states = intent.getExtras().getString("status");
+        String status = intent.getExtras().getString("status");
 
-        TextView text =  findViewById(R.id.textView);
-        text.setText(states);
+        playAgainBt = findViewById(R.id.again);
+        returnToMenu = findViewById(R.id.return_to_menu);
+        TextView text =  findViewById(R.id.status);
+        
 
+        
+        playAgain();
+        returnToMenu();
+        customizeStatus(text, status);
+
+
+
+
+    }
+
+    private void customizeStatus(TextView text,String str) {
+
+        text.setText(str);
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Sansaul_Petronika.ttf");
-
         text.setTypeface(custom_font);
         text.setTextColor(Color.BLACK);
+    }
 
-        Button playAgainBt = findViewById(R.id.again);
+
+
+    private void playAgain() {
+        
         playAgainBt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
-
             }
         });
 
 
-        Button returnToMenuBt = findViewById(R.id.return_to_menu);
-        returnToMenuBt.setOnClickListener(new View.OnClickListener()
+    }
 
-        {
+    private void returnToMenu() {
+
+        returnToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), homeActivity.class));
-
             }
         });
+
 
     }
 

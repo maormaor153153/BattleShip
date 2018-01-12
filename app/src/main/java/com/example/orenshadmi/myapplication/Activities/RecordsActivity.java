@@ -2,45 +2,64 @@ package com.example.orenshadmi.myapplication.Activities;
 
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.orenshadmi.myapplication.Classes.TableRowRecord;
 import com.example.orenshadmi.myapplication.DB.DatabaseHelper;
 import com.example.orenshadmi.myapplication.R;
 
 public class RecordsActivity extends AppCompatActivity {
 
     DatabaseHelper myDb;
+    TableLayout tableLayout;
     EditText editID;
     EditText editName;
     EditText editSureName;
     EditText editScore;
     Button addData, showData, updateData, deleteData;
+    TextView id , fullName ,score ;
+    private static final int NUM_OF_TABLE_ROWS = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_records);
         myDb = new DatabaseHelper(this);
-        editID = findViewById(R.id.editID);
-        editName = findViewById(R.id.editName);
-        editSureName= findViewById(R.id.editSurename);
-        editScore = findViewById(R.id.editMark);
-        addData = findViewById(R.id.button_add);
-        showData = findViewById(R.id.show_data);
-        updateData = findViewById(R.id.update_data);
-        deleteData = findViewById(R.id.delete);
-        addData();
+        tableLayout = findViewById(R.id.tabel_layout);
+        createTableRows();
+//        editID = findViewById(R.id.editID);
+//        editName = findViewById(R.id.editName);
+//        editSureName= findViewById(R.id.editSurename);
+//        editScore = findViewById(R.id.editMark);
+//        addData = findViewById(R.id.button_add);
+//        showData = findViewById(R.id.show_data);
+//        updateData = findViewById(R.id.update_data);
+//        deleteData = findViewById(R.id.delete);
+//        addData();
         showData();
-        updateData();
-        deleteData();
+//        updateData();
+//        deleteData();
+    }
+
+    public void createTableRows(){
+        for (int i = 0; i < NUM_OF_TABLE_ROWS; i++) {
+
+        }
     }
 
     public void deleteData(){
@@ -89,34 +108,45 @@ public class RecordsActivity extends AppCompatActivity {
         });
     }
 
-    public void showData(){
-        showData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Cursor res = myDb.getAllData();
-                if(res.getCount() == 0 ){
-                    showMessage("error", "Nothing found");
-                    return;
-                }
-                else{
-                    StringBuffer buffer = new StringBuffer();
-                    while(res.moveToNext()){
-                        buffer.append("\n\nId: " + res.getString(0));
-                        buffer.append("\nName: " + res.getString(1));
-                        buffer.append("\nSurename: " + res.getString(2));
-                        buffer.append("\nMark: " + res.getString(3));
-                    }
+    public void showData() {
+        int rowCount = 1;
+        Cursor res = myDb.getAllData();
+        if (res.getCount() == 0) {
 
-                    showMessage("Data", buffer.toString());
-                }
+            return;
+        } else {
+
+            StringBuffer buffer = new StringBuffer();
+
+            while (res.moveToNext()) {
+                TableRow row= new TableRow(this);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                row.setLayoutParams(lp);
+
+                id = new TextView(this);
+                initialzieTextView(id, res.getString(0));
+
+                fullName = new TextView(this);
+                initialzieTextView(fullName, res.getString(1) + " " + res.getString(2));
+
+                score = new TextView(this);
+                initialzieTextView(score, res.getString(3));
+
+                row.addView(id);
+                row.addView(fullName);
+                row.addView(score);
+                tableLayout.addView(row);
+
             }
-        });
+
+
+        }
     }
 
-    public void showMessage(String title, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.show();
+    private void initialzieTextView(TextView textView, String str) {
+        textView.setText(str);
+        textView.setTextAppearance(this, android.R.style.TextAppearance_Large);
+        textView.setTypeface(id.getTypeface(), Typeface.BOLD);
+        textView.setGravity(Gravity.CENTER);
     }
 }
