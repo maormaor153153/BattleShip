@@ -138,6 +138,7 @@ public class resultActivity extends AppCompatActivity {
         super.onResume();
 
         getCurrentLocation();
+        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         locationCoordinates = currentLocation.getLongitude() + " " + currentLocation.getLatitude();
         Log.d("LOCATION:" , locationCoordinates);
     }
