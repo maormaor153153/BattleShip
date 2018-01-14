@@ -51,7 +51,7 @@ public class resultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+       // overridePendingTransition(R.anim.enter, R.anim.exit);
 
         myDB = new DatabaseHelper(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -144,7 +144,7 @@ public class resultActivity extends AppCompatActivity {
 
         getCurrentLocation();
         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        locationCoordinates = currentLocation.getLongitude() + " " + currentLocation.getLatitude();
+        locationCoordinates = currentLocation.getLatitude() + " " + currentLocation.getLongitude();
         Log.d("LOCATION:" , locationCoordinates);
     }
 
@@ -238,7 +238,7 @@ public class resultActivity extends AppCompatActivity {
 
 
     private void playAgain() {
-        
+
         playAgainBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

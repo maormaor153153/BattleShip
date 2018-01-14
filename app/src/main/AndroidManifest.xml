@@ -38,14 +38,12 @@
         <activity
             android:name=".Activities.RuleActivity"
             android:noHistory="true" />
-        <activity
-            android:name=".Activities.MapActivity"
-            android:noHistory="true" />
-        <activity android:name=".Activities.RecordsActivity">
-        </activity>
-        <service android:name=".Activities.MyService"></service>
-    </application>
 
+        <activity android:name=".Activities.RecordsActivity"
+            android:noHistory="true">
+        </activity>
+        <service android:name=".Service.MyService"></service>
+    </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
