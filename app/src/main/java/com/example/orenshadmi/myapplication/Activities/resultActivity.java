@@ -21,7 +21,6 @@ public class resultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
 
         Intent intent = getIntent();
         String status = intent.getExtras().getString("status");

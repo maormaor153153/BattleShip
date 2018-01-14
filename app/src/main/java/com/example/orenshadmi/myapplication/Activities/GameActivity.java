@@ -19,10 +19,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.view.ViewParent;
 import android.widget.TextView;
@@ -38,6 +36,8 @@ import com.example.orenshadmi.myapplication.Views.GridButton;
 import com.example.orenshadmi.myapplication.Classes.Board;
 
 import java.util.Random;
+
+import tyrantgit.explosionfield.ExplosionField;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     boolean flagPlayer;
@@ -69,6 +69,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         overridePendingTransition(R.anim.enter, R.anim.exit);
 
 
+
     }
 
     protected void onStart() {
@@ -76,7 +77,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         // Bind to LocalService
         Intent intent = new Intent(this, MyService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -87,7 +87,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         createBotBoard();
         updateBoard((GridLayout) findViewById(R.id.computer_layout));
         getSensorAccelemetorForStart();
-        checkForSensor();
+        checkAlltheTimeForSensor();
 
     }
     @Override
@@ -96,12 +96,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         unbindService(mConnection);
         mBound = false;
     }
-
-    /**
-     * Defines callbacks for service binding, passed to bindService()
-     */
-
-
     private void setGridsByGameLevel() {
         this.gameLevel = gameLogic.getGameLevel();
         GridLayout playerLayout = findViewById(R.id.player_layout);
@@ -124,7 +118,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             computerLayout.setRowCount(HARD__GRID_SIZE);
         }
     }
-
     private void createBotBoard() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -151,7 +144,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             gridLayout.addView(gridButton);
         }
     }
-
     @SuppressLint("NewApi")
     public void createPlayerBoard() { // This Board in Up Top
         Display display = getWindowManager().getDefaultDisplay();
@@ -189,22 +181,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         gameLogic.printfleet(test);
 
     }
-
     @SuppressLint("NewApi")
     @Override
     public void onClick(final View v) {
         TextView turn = findViewById(R.id.turn);
         turn.setText(Player_Turn);
+        GridLayout gridLayoutattck = findViewById(R.id.computer_layout);
         int flagDestroyed;
         if (v instanceof GridButton) {
             final GridButton gridButton = (GridButton) v;
-
             flagPlayer = gameLogic.attckComputerBoard(gridButton.getPositionX(), gridButton.getPositionY());
             if (gameLogic.wasMissPlayer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
 
             } else if (flagPlayer == true) {
-                animateForAttack(gridButton, v);
-
+               animateForAttack(gridButton,gridLayoutattck , 0);
                 Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
                 gridButton.setBackgroundDrawable(occupied);
                 flagDestroyed = gameLogic.destroyedShipByPlayer(gridButton.getPositionX(), gridButton.getPositionY());
@@ -241,7 +231,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
-
     @SuppressLint("NewApi")
     public void computerAttack() {
         TextView turn = findViewById(R.id.turn);
@@ -258,7 +247,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             flagForComputer = gameLogic.attackPlayerBoard(gridButton.getPositionX(), gridButton.getPositionY());
             if (gameLogic.wasMissComputer(gridButton.getPositionX(), gridButton.getPositionY()) == true) {
             } else if (flagForComputer == true) {
-                animateForAttack(gridButton, gridButtoN);
+                animateForAttack(gridButton, gridLayoutattck,1);
                 Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
                 gridButton.setBackgroundDrawable(occupied);
                 flagDestroyed = gameLogic.destroyedShipByComputer(gridButton.getPositionX(), gridButton.getPositionY());
@@ -279,7 +268,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         while (flagforexit != true);
         turn.setText(Player_Turn);
     }
-
     private void toastOfDestroyedShip() {
         Context context = getApplicationContext();
         CharSequence text = "Ship destroyed!";
@@ -287,18 +275,40 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
-
     @SuppressLint("NewApi")
-    private void animateForAttack(final GridButton gridButton, View gridButtoN) {
+    private void animateForAttack(final GridButton gridButton,GridLayout gridLayout,int identification) {
 
-        gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
+        final ExplosionField explosionField = ExplosionField.attach2Window(this);
+        int index = gridLayout.indexOfChild(gridButton);
+        Drawable occupied = getResources().getDrawable(R.drawable.occupied_shape);
+
+        gridButton.setBackgroundDrawable(occupied);
+        explosionField.explode(gridButton);
+
+        int X = gridButton.getPositionX();
+        int Y = gridButton.getPositionY();
+        gridLayout.removeView(gridButton);
+
+        if(identification == 1 ) {
+            createButtonForGridPlayer(X, Y,index);
+        }else {
+          createButtonForGridComputer(X, Y,index);
+        }
+
+       /* gridButtoN.animate().scaleY(2).scaleX(2).setDuration(200).withEndAction(new Runnable() {
             @Override
             public void run() {
                 gridButton.animate().scaleY(1).scaleX(1).setDuration(200).start();
 
             }
         }).start();
+        */
+
+
     }
+
+
+
     @SuppressLint("NewApi")
     private void animateForMiss(final GridButton gridButton, final View gridButtoN) {
         animRotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
@@ -381,7 +391,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(GameActivity.this, resultActivity.class);
             intent.putExtra("status", status);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransition(R.anim.right_in, R.anim.rotate);
+
         }
     }
 
@@ -393,6 +404,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(GameActivity.this, resultActivity.class);
             intent.putExtra("status", status);
             startActivity(intent);
+
         }
     }
 
@@ -490,19 +502,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private boolean checkIfSensorCheckingAllTheTime() {
-
         boolean forCheckWin = false;
-
         int randomIndex = foundLevelGame();
         View gridButtoN;
         GridLayout gridLayoutattck = findViewById(R.id.player_layout);
         gridButtoN = gridLayoutattck.getChildAt(randomIndex);
         final GridButton gridButton = (GridButton) gridButtoN;
-
-
         int flagDestroyed = 0;
-        boolean flagForHere = false;
-        boolean stateForAttackBySensor = false;
 
         Log.d("fleet", "size" + gameLogic.getPlayerBoard().getFleet().size());
         Log.d("fleet", "state0" + gameLogic.getPlayerBoard().getFleet().get(0).getState().toString());
@@ -512,7 +518,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             if (gameLogic.getPlayerBoard().getFleet().get(i).getState().toString().equals("placed")) {
                 Log.d("flagDestroyed", "i:" + i);
                 flagDestroyed = i;
-                flagForHere = true;
                 gameLogic.getPlayerBoard().getFleet().get(i).setState(Ship.configStatus.dead);
                 for (int g = 0; g < gameLogic.getPlayerBoard().getFleet().get(i).getLength(); g++) {
                     gameLogic.attackPlayerBoard(gameLogic.getPlayerBoard().getFleet().get(i).getShipCoordinates().get(g).getPositionX()
@@ -521,16 +526,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
         }
-
-
         for (int i = 0; i < gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().size(); i++) {
             int number;
             Drawable destroyed = getResources().getDrawable(R.drawable.destroyed);
             number = gridButton.findChildByCoordtion(gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionX(),
                     gameLogic.getPlayerBoard().getFleet().get(flagDestroyed).getShipCoordinates().get(i).getPositionY(),
                     gameLogic.gamelevelForGridButoon(gameLevel));
-           // View gridButtoN;
-            //GridLayout gridLayoutattck = findViewById(R.id.player_layout);
             gridButtoN = gridLayoutattck.getChildAt(number);
             gridButtoN.setBackground(destroyed);
         }
@@ -555,7 +556,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         return stateForAttackBySensor;
     }
 
-    private void checkForSensor() {
+    private void checkAlltheTimeForSensor() {
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -599,6 +600,87 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             mBound = false;
         }
     };
+
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void createButtonForGridPlayer(int positionX, int positionY, int index) {
+    Log.d("before", "positionX" + positionX);
+    Log.d("before", "positionY" + positionY);
+
+
+    Display display = getWindowManager().getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    int screenWidth = size.x;
+    GridLayout gridLayout = findViewById(R.id.player_layout);
+    int cellSize = screenWidth / gridLayout.getColumnCount();
+    if (gameLevel == EASY) {
+        cellSize -= 110;
+    } else if (gameLevel == MEDIUM) {
+        cellSize -= 70;
+    } else if (gameLevel == HARD) {
+        cellSize -= 45;
+    }
+    Coordinate[][] playerBoard;
+    playerBoard = gameLogic.getPlayerBoard().getMat();
+    Board test = gameLogic.getPlayerBoard();
+
+    GridButton gridButton = new GridButton(this);
+    gridButton.setPositionX(positionX);
+    gridButton.setPositionY(positionY);
+
+    if (playerBoard[positionX][positionY].isOccupied()) {
+        Drawable playerShip = ContextCompat.getDrawable(this, R.drawable.playership);
+        gridButton.setBackground(playerShip);
+    } else {
+        Drawable border = ContextCompat.getDrawable(this, R.drawable.occupied_shape);
+        gridButton.setBackgroundDrawable(border);
+    }
+
+   gridButton.setLayoutParams(new ViewGroup.LayoutParams(cellSize, cellSize));
+    gridLayout.addView(gridButton,index);
+
+    gameLogic.printfleet(test);
+
+    Log.d("afterPlayer", "positionX" + gridButton.getPositionX());
+    Log.d("afterPlayer", "positionY" + gridButton.getPositionY());
+}
+    private void createButtonForGridComputer(int positionX, int positionY,int index) {
+
+
+
+        Log.d("beforeComputer", "positionX" + positionX);
+        Log.d("beforeComputer", "positionY" +positionY);
+
+
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        GridLayout gridLayout = findViewById(R.id.computer_layout);
+        int cellSize = screenWidth / gridLayout.getColumnCount();
+        if (gameLevel == EASY) {
+            cellSize -= 45;
+        } else if (gameLevel == MEDIUM) {
+            cellSize -= 35;
+        } else if (gameLevel == HARD) {
+            cellSize -= 25;
+        }
+            GridButton gridButton = new GridButton(this);
+            gridButton.setPositionX(positionX);
+            gridButton.setPositionY(positionY);
+            Drawable border = ContextCompat.getDrawable(this, R.drawable.occupied_shape);
+           gridButton.setBackgroundDrawable(border);
+            gridButton.setOnClickListener(this);
+            gridButton.setLayoutParams(new ViewGroup.LayoutParams(cellSize, cellSize));
+            gridLayout.addView(gridButton,index);
+
+
+        Log.d("afterComputer", "positionX" + gridButton.getPositionX());
+        Log.d("afterComputer", "positionY" + gridButton.getPositionY());
+
+
+    }
 
 
 
