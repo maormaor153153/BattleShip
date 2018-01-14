@@ -86,8 +86,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         createPlayerBoard();
         createBotBoard();
         updateBoard((GridLayout) findViewById(R.id.computer_layout));
-        getSensorAccelemetorForStart();
-        checkAlltheTimeForSensor();
+     //   getSensorAccelemetorForStart();
+    //    checkAlltheTimeForSensor();
 
     }
     @Override
@@ -486,21 +486,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void getSensorAccelemetorForStart() {
-        handler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                sensorSamplingFirst[0] = mService.getXaccelemetor();
-                sensorSamplingFirst[1] = mService.getYaccelemetor();
-                sensorSamplingFirst[2] = mService.getZaccelemetor();
-
-                Log.d("sensorSamplingFirst: X", " " + sensorSamplingFirst[0]);
-                Log.d("sensorSamplingFirst: Y", " " + sensorSamplingFirst[1]);
-                Log.d("sensorSamplingFirst: Z", " " + sensorSamplingFirst[2]);
-            }
-        }, 1000);
-    }
+//    private void getSensorAccelemetorForStart() {
+//        handler.postDelayed(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                sensorSamplingFirst[0] = mService.getXaccelemetor();
+//                sensorSamplingFirst[1] = mService.getYaccelemetor();
+//                sensorSamplingFirst[2] = mService.getZaccelemetor();
+//
+//                Log.d("sensorSamplingFirst: X", " " + sensorSamplingFirst[0]);
+//                Log.d("sensorSamplingFirst: Y", " " + sensorSamplingFirst[1]);
+//                Log.d("sensorSamplingFirst: Z", " " + sensorSamplingFirst[2]);
+//            }
+//        }, 1000);
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private boolean checkIfSensorCheckingAllTheTime() {

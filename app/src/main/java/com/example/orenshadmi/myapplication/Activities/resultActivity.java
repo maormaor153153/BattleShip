@@ -40,18 +40,24 @@ public class resultActivity extends AppCompatActivity {
     DatabaseHelper myDB;
     private String score;
     private LocationManager locationManager;
-    Button bt ;
     private LocationListener listener;
     private String locationCoordinates;
+    private Location currentLocation = null;
+    private boolean didAlreadyRequestLocationPermission;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
 
         myDB = new DatabaseHelper(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        final TextView txt = findViewById(R.id.location_text);
+        didAlreadyRequestLocationPermission = false;
 
 
 
@@ -94,7 +100,7 @@ public class resultActivity extends AppCompatActivity {
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                locationCoordinates = location.getLongitude() + " " + location.getLatitude();
+                currentLocation = location;
 
             }
 
@@ -118,13 +124,22 @@ public class resultActivity extends AppCompatActivity {
 
         gameLogic.setNumOfMiss(0);
 
-        configure_button();
+//        configure_button();
 
 
 
         playAgain();
         returnToMenu();
         customizeText(text, status);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getCurrentLocation();
+        locationCoordinates = currentLocation.getLongitude() + " " + currentLocation.getLatitude();
+        Log.d("LOCATION:" , locationCoordinates);
     }
 
     private boolean isScoreHighEnough(double playerScore) {
@@ -137,34 +152,51 @@ public class resultActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case 10:
-                configure_button();
-                break;
-            default:
-                break;
+
+
+    private boolean isPermissionForLocationServicesGranted() {
+        return android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                (!(checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED));
+
+    }
+
+    private void getCurrentLocation() {
+        if (requestLocationPermissionsIfNeeded(false)) {
+            if (currentLocation == null) {
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            }
+
+            float metersToUpdate = 1;
+            long intervalMilliseconds = 1000;
+            locationManager.requestLocationUpdates("gps", intervalMilliseconds, metersToUpdate, listener);
         }
     }
 
+    private boolean requestLocationPermissionsIfNeeded(boolean byUserAction) {
+        boolean isAccessGranted;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String fineLocationPermission = android.Manifest.permission.ACCESS_FINE_LOCATION;
+            String coarseLocationPermission = android.Manifest.permission.ACCESS_COARSE_LOCATION;
+            isAccessGranted = getApplicationContext().checkSelfPermission(fineLocationPermission) == PackageManager.PERMISSION_GRANTED &&
+                    getApplicationContext().checkSelfPermission(coarseLocationPermission) == PackageManager.PERMISSION_GRANTED;
+            if (!isAccessGranted) { // The user blocked the location services of THIS app / not yet approved
 
-
-    void configure_button(){
-        // first check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
-                        ,10);
+                if (!didAlreadyRequestLocationPermission || byUserAction) {
+                    didAlreadyRequestLocationPermission = true;
+                    String[] permissionsToAsk = new String[]{fineLocationPermission, coarseLocationPermission};
+                    // IllegalArgumentException: Can only use lower 16 bits for requestCode
+                    ActivityCompat.requestPermissions(this, permissionsToAsk, LOCATION_PERMISSION_REQUEST_CODE);
+                }
             }
-            return;
+        } else {
+            // Because the user's permissions started only from Android M and on...
+            isAccessGranted = true;
         }
-        // this code won't execute IF permissions are not allowed, because in the line above there is return statement.
 
-
-                locationManager.requestLocationUpdates("gps", 5000, 0, listener);
-
+        return isAccessGranted;
     }
 
 
