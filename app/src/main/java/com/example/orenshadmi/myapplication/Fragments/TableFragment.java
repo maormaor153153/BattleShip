@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.orenshadmi.myapplication.Activities.RecordsActivity;
 import com.example.orenshadmi.myapplication.Classes.TableRowRecord;
 import com.example.orenshadmi.myapplication.DB.DatabaseHelper;
 import com.example.orenshadmi.myapplication.R;
@@ -31,7 +29,7 @@ public class TableFragment extends Fragment {
     private static final int ARRAY_SIZE = 10;
     DatabaseHelper myDb;
     TableLayout tableLayout;
-    TextView place, fullName ,score ;
+    TextView rank, name,score ;
     View tableView;
     private TableRowRecord[] records;
     private RadioGroup radioGroup;
@@ -39,6 +37,8 @@ public class TableFragment extends Fragment {
     private double latitude;
     private double longitude;
     private int numOfRecords;
+    private static final int RANK_COLUMN_POSITION = 0;
+
 
 
 
@@ -79,7 +79,7 @@ public class TableFragment extends Fragment {
         int size = tableLayout.getChildCount();
         for(int i = 0 ; i < size; i++){
             final TableRow row = (TableRow) tableLayout.getChildAt(i);
-            if(!row.getChildAt(0).equals(place)){
+            if(!row.getChildAt(RANK_COLUMN_POSITION).equals(place)){
                 row.setBackgroundColor(Color.WHITE);
             }
         }
@@ -96,27 +96,25 @@ public class TableFragment extends Fragment {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (row.getChildAt(0).getTag() != null) {
-                        unMarkOtherRows((String)row.getChildAt(0).getTag());
+                    String columnTextView = (String) row.getChildAt(RANK_COLUMN_POSITION).getTag();
+                    if (columnTextView != null) {
+
+                        unMarkOtherRows(columnTextView);
                         row.setBackgroundColor(Color.YELLOW);
 
-                        Log.d("Location", "" + row.getChildAt(0).getTag());
-                        double[] latLng = changeStringToDouble(row.getChildAt(0).getTag());
+                        double[] latLng = getLatLng(columnTextView);
                         onLocationSetListener.zoomToLocation(latLng[0], latLng[1]);
                     }
                     else{
-                        Toast.makeText(tableView.getContext(), "Player didn't add location", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(tableView.getContext(), "No location added for that score", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
     }
 
-    private double[] changeStringToDouble(Object tag) {
-        String locationCoordinates = (String)tag;
+    private double[] getLatLng(String locationCoordinates) {
         String[] splited =  locationCoordinates.split("\\s+");
-
-
         double [] latLng = {Double.parseDouble(splited[0]),Double.parseDouble(splited[1])};
 
         return latLng;
@@ -175,24 +173,23 @@ public class TableFragment extends Fragment {
     public void showDataByGameLevel(String gameLevel) {
 
         int position = 1;
-       Cursor cursor = myDb.getDataByGameLevel(gameLevel);
+        Cursor cursor = myDb.getDataByGameLevel(gameLevel);
 
-       initializeRecords();
-
-
+        initializeRecords();
         initializeTable();
+
         while (cursor.moveToNext()) {
             TableRow row= new TableRow(tableView.getContext());
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             row.setLayoutParams(lp);
 
-            place = new TextView(tableView.getContext());
-            initializeText(place, ""+position);
+            rank = new TextView(tableView.getContext());
+            initializeText(rank, ""+position);
 
 
-            fullName = new TextView(tableView.getContext());
+            name = new TextView(tableView.getContext());
             String nameStr =cursor.getString(1);
-            initializeText(fullName,nameStr );
+            initializeText(name,nameStr );
 
             score = new TextView(tableView.getContext());
             String scoreStr =cursor.getString(2);
@@ -202,14 +199,14 @@ public class TableFragment extends Fragment {
 
 
             if(locationCoordinate != null) {
-                place.setTag(locationCoordinate);
+                rank.setTag(locationCoordinate);
                 changeStringToDouble(locationCoordinate);
             }
 
             records[position - 1] = new TableRowRecord(tableView.getContext(),position,nameStr,Integer.parseInt(scoreStr),longitude,latitude );
 
-            row.addView(place);
-            row.addView(fullName);
+            row.addView(rank);
+            row.addView(name);
             row.addView(score);
             tableLayout.addView(row);
             position++;
@@ -239,10 +236,7 @@ public class TableFragment extends Fragment {
     }
 
 
-
-
-
-
+    //LISTENER TO PASS INFORMATION TO ACTIVITY
     public interface onLocationSetListener
     {
         public void setLocations(TableRowRecord[] locations, int numOfRecords);

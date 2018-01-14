@@ -86,24 +86,7 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/request_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/location_text"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="getlocation" />
 
-    <TextView
-        android:id="@+id/location_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/status"
-        android:layout_marginTop="22dp"
-        android:text="Coordinates:" />
 
 
 </RelativeLayout>

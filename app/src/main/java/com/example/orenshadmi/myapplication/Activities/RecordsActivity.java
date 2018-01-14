@@ -1,6 +1,5 @@
 package com.example.orenshadmi.myapplication.Activities;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,10 +37,9 @@ public class RecordsActivity extends AppCompatActivity implements TableFragment.
     android.support.v4.app.FragmentManager fragmentManager;
     android.support.v4.app.FragmentTransaction fragmentTransaction;
     TableFragment tableFragment;
-    Button btn;
     GoogleMap mGoogleMap;
-    private TableRowRecord[] mLocations;
-    private  MarkerOptions[] options;
+    private TableRowRecord[] tableRowRecords;
+    private  MarkerOptions[] markersArray;
 
 
     @Override
@@ -151,8 +148,8 @@ public class RecordsActivity extends AppCompatActivity implements TableFragment.
 
     public void updateInfo(TableRowRecord[] locations, int numOfRecords){
 
-        mLocations = locations;
-        options = new MarkerOptions[numOfRecords];
+        tableRowRecords = locations;
+        markersArray = new MarkerOptions[numOfRecords];
         Log.d("TAG", "" + numOfRecords);
         mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 2.0f ) );
         removeAllMarkers();
@@ -164,10 +161,10 @@ public class RecordsActivity extends AppCompatActivity implements TableFragment.
 
     public void addMarkersToMap(int numOfRecords) {
         for(int i = 0 ; i < numOfRecords; i++) {
-            options[i] = new MarkerOptions().title(""+mLocations[i].getId()+". " + mLocations[i].getName())
-                    .position(new LatLng(mLocations[i].getLongitude(), mLocations[i].getLatitude()))
-                    .snippet("Score: " + mLocations[i].getScore());
-            mGoogleMap.addMarker(options[i]);
+            markersArray[i] = new MarkerOptions().title(""+ tableRowRecords[i].getId()+". " + tableRowRecords[i].getName())
+                    .position(new LatLng(tableRowRecords[i].getLongitude(), tableRowRecords[i].getLatitude()))
+                    .snippet("Score: " + tableRowRecords[i].getScore());
+            mGoogleMap.addMarker(markersArray[i]);
         }
 
         setOnMarkerListener();

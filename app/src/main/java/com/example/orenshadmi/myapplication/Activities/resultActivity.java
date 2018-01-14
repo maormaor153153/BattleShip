@@ -56,14 +56,23 @@ public class resultActivity extends AppCompatActivity {
         myDB = new DatabaseHelper(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        final TextView txt = findViewById(R.id.location_text);
+        final TextView text =  findViewById(R.id.status);
+        brokeARecord = findViewById(R.id.broke_a_record);
+        editText = findViewById(R.id.input);
+        playAgainBt = findViewById(R.id.again);
+        returnToMenu = findViewById(R.id.return_to_menu);
+
         didAlreadyRequestLocationPermission = false;
-
-
 
         Intent intent = getIntent();
         String status = intent.getExtras().getString("status");
-        brokeARecord = findViewById(R.id.broke_a_record);
+
+        playAgain();
+        returnToMenu();
+        customizeText(text, status);
+
+
+
         if(gameLogic.isIsPlayerWon() ){
             if(isScoreHighEnough(gameLogic.getPlayerScore())){
                 score = "" + gameLogic.getPlayerScore();
@@ -79,20 +88,18 @@ public class resultActivity extends AppCompatActivity {
             else{
 
                 customizeText(brokeARecord, "Your score is:" + gameLogic.getPlayerScore());
-                editText = findViewById(R.id.input);
+
                 editText.setVisibility(View.INVISIBLE);
             }
 
         }
         else
         {
-            editText = findViewById(R.id.input);
             editText.setVisibility(View.INVISIBLE);
         }
 
-        playAgainBt = findViewById(R.id.again);
-        returnToMenu = findViewById(R.id.return_to_menu);
-        final TextView text =  findViewById(R.id.status);
+
+
 
 
 
@@ -122,15 +129,13 @@ public class resultActivity extends AppCompatActivity {
             }
         };
 
+
         gameLogic.setNumOfMiss(0);
 
-//        configure_button();
 
 
 
-        playAgain();
-        returnToMenu();
-        customizeText(text, status);
+
     }
 
     @Override
@@ -147,6 +152,10 @@ public class resultActivity extends AppCompatActivity {
 
         Cursor cursor = myDB.getDataByGameLevel("" +gameLogic.getGameLevel());
         cursor.moveToLast();
+
+        if(cursor.getCount() == 0){
+            return true;
+        }
         if((Double.parseDouble(cursor.getString(2)) < playerScore) || (cursor.getCount() < 10)){
             return true;
         }
@@ -155,12 +164,7 @@ public class resultActivity extends AppCompatActivity {
 
 
 
-    private boolean isPermissionForLocationServicesGranted() {
-        return android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                (!(checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED));
 
-    }
 
     private void getCurrentLocation() {
         if (requestLocationPermissionsIfNeeded(false)) {
