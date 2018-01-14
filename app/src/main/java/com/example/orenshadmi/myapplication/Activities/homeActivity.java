@@ -53,12 +53,7 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        Button mapButtoon = findViewById(R.id.map);
-        mapButtoon.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), MapActivity.class));
-            }
-        });
+
 
         Button recordsButton = findViewById(R.id.records);
         recordsButton.setOnClickListener(new View.OnClickListener() {

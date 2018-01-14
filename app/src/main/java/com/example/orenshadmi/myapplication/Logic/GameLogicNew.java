@@ -13,6 +13,13 @@ public class GameLogicNew {
 
     private static final GameLogicNew ourInstance = new GameLogicNew();
     private static final int SCORE_VALUE = 100;
+    private static final int EASY_GRID = 5;
+    private static final int MEDIUM_GRID = 7;
+    private static final int HARD_GRID = 10;
+    private static final int EASY = 1;
+    private static final int MEDIUM= 2;
+    private static final int HARD = 3;
+    private static boolean isPlayerWon ;
     private static boolean isFirstClick ;
     private static Coordinate firstClick;
     private static Coordinate secondClick;
@@ -22,16 +29,16 @@ public class GameLogicNew {
     private static int size;
     private static int gameLevel;
     private static int numOfMiss;
-    private static  double missValue ;
+    private static  double missValue  ;
     public static double playerScore;
 
 
 
     public  void setMissValue() {
         int numOfCellsInMat = playerBoard.getROWS() * playerBoard.getCOLS();
-        int numOfShips = getTotalLengthOfShips();
+        int totalLengthOfShips = getTotalLengthOfShips();
 
-        this.missValue = (numOfCellsInMat / (numOfCellsInMat - numOfShips)) ;
+        this.missValue = (SCORE_VALUE / (numOfCellsInMat - totalLengthOfShips)) ;
     }
 
     public void incrementNumOfMisses(){
@@ -313,12 +320,14 @@ public class GameLogicNew {
     public boolean winPlayerLog()
     {
         boolean flag;
+        isPlayerWon = true;
         flag = computerBoard.winner(computerBoard);
         return flag;
     }
     public boolean winComputerLog()
     {
         boolean flag;
+        isPlayerWon = false;
         flag = playerBoard.winner(playerBoard);
         return flag;
     }
@@ -397,12 +406,12 @@ public class GameLogicNew {
     public int gamelevelForGridButoon(int numberOflevel)
     {
 
-        if (numberOflevel == 1) {
-            return 5;
-        } else if (numberOflevel == 2) {
-            return 7;
-        } else if (numberOflevel == 3) {
-            return 10;
+        if (numberOflevel == EASY) {
+            return EASY_GRID;
+        } else if (numberOflevel == MEDIUM) {
+            return MEDIUM_GRID;
+        } else if (numberOflevel == HARD) {
+            return HARD_GRID;
         }
         return 0;
     }
@@ -419,4 +428,11 @@ public class GameLogicNew {
         return playerScore;
     }
 
+    public static boolean isIsPlayerWon() {
+        return isPlayerWon;
+    }
+
+    public static void setNumOfMiss(int numOfMiss) {
+        GameLogicNew.numOfMiss = numOfMiss;
+    }
 }

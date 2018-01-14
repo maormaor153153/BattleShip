@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/levels"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="96dp"
         android:orientation="vertical"
         >
         <Button
@@ -49,5 +48,45 @@
             android:background="@drawable/shape"
             android:text="Return to Menu" />
 
+
+
+
     </LinearLayout>
+
+    <TextView
+        android:layout_below="@id/buttons"
+        android:id="@+id/broke_a_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="35dp"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"/>
+
+
+    <RelativeLayout
+        android:id="@+id/texts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/broke_a_record"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        >
+
+
+
+
+    <EditText
+        android:textSize="60dp"
+        android:id="@+id/input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Please enter your name"
+        />
+
+    </RelativeLayout>
+
+
+
+
 </RelativeLayout>

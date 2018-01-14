@@ -389,10 +389,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private void WinComputer() {
         boolean flag;
         flag = gameLogic.winComputerLog();
+        String score = null;
         String status = "You Lose";
         if (flag == true) {
             Intent intent = new Intent(GameActivity.this, resultActivity.class);
             intent.putExtra("status", status);
+            intent.putExtra("score", score);
             startActivity(intent);
         }
     }
