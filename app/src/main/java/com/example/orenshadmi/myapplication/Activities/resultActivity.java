@@ -170,6 +170,7 @@ public class resultActivity extends AppCompatActivity {
 
 
 
+
     private void initilaizeRecordStr() {
         brokeARecordStr = new StringBuilder();
         brokeARecordStr.append("Congartulations! You broke a record!\n");
