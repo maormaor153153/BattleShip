@@ -1,0 +1,9 @@
+<application>
+  <component name="ParameterNameHintsSettings">
+    <blacklists>
+      <blacklist language="Java">
+        <added pattern="android.database.sqlite.SQLiteDatabase.rawQuery(sql,selectionArgs)" />
+      </blacklist>
+    </blacklists>
+  </component>
+</application>
