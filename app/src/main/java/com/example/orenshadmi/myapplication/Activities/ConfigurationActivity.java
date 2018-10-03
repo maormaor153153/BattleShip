@@ -23,7 +23,7 @@ import com.example.orenshadmi.myapplication.R;
 import com.example.orenshadmi.myapplication.Views.GridButton;
 import static com.example.orenshadmi.myapplication.R.id;
 import static com.example.orenshadmi.myapplication.R.layout;
-
+//newnew11
 public class ConfigurationActivity extends AppCompatActivity implements View.OnClickListener {
 
     GameLogicNew gameLogic = GameLogicNew.getInstance();
