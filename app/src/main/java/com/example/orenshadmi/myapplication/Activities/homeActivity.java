@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
 import com.example.orenshadmi.myapplication.R;
 public class homeActivity extends AppCompatActivity implements View.OnClickListener {
-
+//newnew7
     GameLogicNew gameLogic = GameLogicNew.getInstance();
     boolean isLevelPicked = false;
 
