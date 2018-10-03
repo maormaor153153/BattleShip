@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
 import com.example.orenshadmi.myapplication.R;
-
 public class homeActivity extends AppCompatActivity implements View.OnClickListener {
 
     GameLogicNew gameLogic = GameLogicNew.getInstance();
@@ -87,7 +86,7 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
             this.isLevelPicked = true;
             Button gameLevelButton =(Button) v;
             gameLogic.setGameLevel((Integer)gameLevelButton.getTag());
-           // disableAllButtonWithDifferentTag((Integer)gameLevelButton.getTag(), gameLevelButton.getParent());
+            // disableAllButtonWithDifferentTag((Integer)gameLevelButton.getTag(), gameLevelButton.getParent());
             setAllButtonThatNotQueuedToShape((Integer)gameLevelButton.getTag(), gameLevelButton.getParent());
             Drawable queued = getResources().getDrawable( R.drawable.white);
             gameLevelButton.setBackgroundDrawable(queued);
@@ -101,11 +100,13 @@ public class homeActivity extends AppCompatActivity implements View.OnClickListe
             for( int i = 0 ; i < size ; i++){
                 Button gameLevelButton = (Button)linearLayout.getChildAt(i);
                 if((Integer)gameLevelButton.getTag() != tag){
-                   // gameLevelButton.setEnabled(false);
+                    // gameLevelButton.setEnabled(false);
                     Drawable shape = getResources().getDrawable( R.drawable.shape);
-                    	                    gameLevelButton.setBackgroundDrawable(shape);
+                    gameLevelButton.setBackgroundDrawable(shape);
                 }
             }
         }
     }
 }
+
+

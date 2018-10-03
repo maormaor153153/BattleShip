@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import com.example.orenshadmi.myapplication.R;
 
+
+
+
+
 public class RuleActivity extends AppCompatActivity {
 
     @Override
