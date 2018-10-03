@@ -26,7 +26,7 @@ import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+//newnew3
 import com.example.orenshadmi.myapplication.Classes.Coordinate;
 import com.example.orenshadmi.myapplication.Classes.Ship;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;

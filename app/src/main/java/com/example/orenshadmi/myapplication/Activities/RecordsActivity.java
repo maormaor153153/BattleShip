@@ -30,7 +30,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+//newnew5
+//newnew6
 public class RecordsActivity extends AppCompatActivity implements TableFragment.onLocationSetListener , LocationListener{
 
     DatabaseHelper myDb;
