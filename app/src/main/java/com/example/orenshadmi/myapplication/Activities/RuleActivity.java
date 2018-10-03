@@ -10,7 +10,7 @@ import com.example.orenshadmi.myapplication.R;
 
 
 
-
+//newnew8
 public class RuleActivity extends AppCompatActivity {
 
     @Override
