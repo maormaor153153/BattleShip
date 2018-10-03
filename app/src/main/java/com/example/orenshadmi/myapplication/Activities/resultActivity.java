@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.example.orenshadmi.myapplication.DB.DatabaseHelper;
 import com.example.orenshadmi.myapplication.Logic.GameLogicNew;
 import com.example.orenshadmi.myapplication.R;
-
+//newnew9
 public class resultActivity extends AppCompatActivity {
 
     GameLogicNew gameLogic = GameLogicNew.getInstance();
