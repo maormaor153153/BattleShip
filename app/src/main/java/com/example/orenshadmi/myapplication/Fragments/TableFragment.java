@@ -24,6 +24,7 @@ import com.example.orenshadmi.myapplication.R;
 /**
  * Created by orenshadmi on 12/01/2018.
  */
+///new
 
 public class TableFragment extends Fragment {
     private static final int ARRAY_SIZE = 10;
