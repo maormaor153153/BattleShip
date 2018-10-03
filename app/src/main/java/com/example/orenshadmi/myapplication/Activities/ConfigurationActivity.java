@@ -157,6 +157,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
             gridLayout.setClickable(false);
         }
     }
+    //11
     @SuppressLint("NewApi")
     @Override
     public void onClick(View v ) {
