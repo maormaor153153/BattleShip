@@ -66,9 +66,8 @@ public class resultActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String status = intent.getExtras().getString("status");
-///chagni
-        //2222
-        ///213213123
+//1111
+        ///2222
         playAgain();
         returnToMenu();
         customizeText(text, status);
